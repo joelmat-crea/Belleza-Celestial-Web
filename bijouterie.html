@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bijouterie - Belleza Celestial</title>
+    <link rel="icon" href="logo2.png" type="image/png">
+    <style>
+        :root { --primary-color: #0056b3; --secondary-color: #ffffff; --accent-color: #e3f2fd; --text-color: #333; --card-bg: #fff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--accent-color); color: var(--text-color); margin: 0; overflow-x: hidden; }
+        header { background: var(--primary-color); padding: 10px 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1100; justify-content: space-between; }
+        .logo img { height: 50px; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .section-title { text-align: center; color: var(--primary-color); margin-bottom: 2rem; font-size: 2rem; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .product-card { background: var(--card-bg); padding: 1.5rem; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; position: relative; transition: transform 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.25); }
+        .product-card img { width: 100%; border-radius: 5px; }
+        .product-title { color: var(--primary-color); margin: 1rem 0 0.5rem; }
+        .price { font-size: 1.2rem; font-weight: bold; color: #555; margin-bottom: 1rem; }
+        .btn-add { background: var(--primary-color); color: #fff; border: none; padding: 8px 16px; width: 100%; border-radius: 5px; cursor: pointer; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: var(--primary-color); text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+        
+        /* Carrito Sidebar */
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1150; display: none; }
+        .cart-overlay.active { display: block; }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 350px; height: 100%; background: #fff; z-index: 1200; transition: right 0.3s; padding: 20px; display: flex; flex-direction: column; }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .cart-items { flex: 1; overflow-y: auto; }
+        .close-cart { cursor: pointer; font-size: 1.5rem; }
+        
+        @media (max-width: 768px) {
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .product-card { padding: 8px; }
+            .container { padding: 0 10px 4rem; }
+            .cart-sidebar { width: 100%; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo"><img src="logo1.png" alt="Logo"></a>
+        <a href="#" id="cart-btn" style="color: white; font-size: 1.2rem; text-decoration: none;">
+            <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+        </a>
+    </header>
+
+    <div class="container">
+        <br>
+        <a href="index.html" class="back-btn">← Volver al Inicio</a>
+        <h2 class="section-title">Bijouterie</h2>
+        <div class="product-grid" id="grid"></div>
+    </div>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart" id="close-cart"><i class="fas fa-times"></i></span></div>
+        <div class="cart-items" id="cart-items"></div>
+    </aside>
+
+    <script>
+        const products = [
+            { id: 48, category: 'Acero Blanco', title: "Cadena Acero Blanco Corazón", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Cadena+Corazon" },
+            { id: 49, category: 'Acero Blanco', title: "Pulsera Acero Blanco Estrellas", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Pulsera+Estrellas" },
+            { id: 50, category: 'Acero Blanco', title: "Aros Argolla Acero Blanco", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Argolla" },
+            { id: 51, category: 'Acero Blanco', title: "Anillo Acero Blanco Ajustable", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Anillo+Ajustable" },
+            { id: 52, category: 'Acero Dorado', title: "Collar Acero Dorado Multicapa", price: "18.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Collar+Multicapa" },
+            { id: 53, category: 'Acero Dorado', title: "Aros Colgantes Dorados", price: "14.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Colgantes" },
+            { id: 54, category: 'Acero Dorado', title: "Pulsera Rígida Dorada", price: "16.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Pulsera+Rigida" },
+            { id: 55, category: 'Acero Dorado', title: "Tobillera Acero Dorado", price: "11.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Tobillera+Dorada" },
+            { id: 56, category: 'Plata 925', title: "Cadena Plata 925 Finita", price: "25.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Cadena+Plata" },
+            { id: 57, category: 'Plata 925', title: "Aros Abridores Plata", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Abridores" },
+            { id: 58, category: 'Plata 925', title: "Dije Plata 925 Luna", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Dije+Luna" },
+            { id: 59, category: 'Plata 925', title: "Anillo Plata 925 Cintillo", price: "22.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Anillo+Cintillo" },
+            { id: 60, category: 'Oro', title: "Aros Oro 18k Perla", price: "80.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Oro" },
+            { id: 61, category: 'Oro', title: "Cadena Oro Laminado", price: "45.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Cadena+Oro" },
+            { id: 62, category: 'Oro', title: "Dije Oro Inicial", price: "30.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Dije+Inicial" },
+            { id: 63, category: 'Oro', title: "Pulsera Oro Hilo Rojo", price: "35.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Pulsera+Hilo" },
+            { id: 64, category: 'Acero Quirurgico', title: "Piercing Nariz Acero", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Piercing+Nariz" },
+            { id: 65, category: 'Acero Quirurgico', title: "Aros Bolita Acero Q", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Bolita" },
+            { id: 66, category: 'Acero Quirurgico', title: "Piercing Ombligo Strass", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Piercing+Ombligo" },
+            { id: 67, category: 'Acero Quirurgico', title: "Expansor Acero Negro", price: "6.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Expansor+Negro" },
+            { id: 68, category: 'Fantasia', title: "Collar Choker Colores", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Choker+Colores" },
+            { id: 69, category: 'Fantasia', title: "Set de Anillos Midi", price: "7.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Set+Anillos" },
+            { id: 70, category: 'Fantasia', title: "Aros Largos Flecos", price: "9.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Flecos" },
+            { id: 71, category: 'Fantasia', title: "Pulsera de la Amistad", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Pulsera+Amistad" }
+        ];
+
+        const grid = document.getElementById('grid');
+        grid.innerHTML = products.map(p => `
+            <article class="product-card">
+                <a href="detalle.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+                    <img src="${p.image}" alt="${p.title}" loading="lazy">
+                    <h3 class="product-title">${p.title}</h3>
+                </a>
+                <p class="price">$${p.price}</p>
+                <button class="btn-add" onclick="addToCart('${p.title}', '${p.price}', '${p.image}', this)">Añadir al Carrito</button>
+            </article>
+        `).join('');
+
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartCountElement = document.getElementById('cart-count');
+        let cart = JSON.parse(localStorage.getItem('belleza-celestial-cart')) || [];
+        cartCountElement.textContent = cart.length;
+
+        function openCart() { cartOverlay.classList.add('active'); cartSidebar.classList.add('active'); renderCart(); }
+        function closeCart() { cartOverlay.classList.remove('active'); cartSidebar.classList.remove('active'); }
+        function addToCart(title, price, image, btn) {
+            const existing = cart.find(i => i.title === title);
+            if(existing) existing.quantity = (existing.quantity || 1) + 1; else cart.push({ title, price, image, quantity: 1 });
+            localStorage.setItem('belleza-celestial-cart', JSON.stringify(cart));
+            cartCountElement.textContent = cart.length;
+            btn.innerText = "¡Añadido!"; btn.style.backgroundColor = "#25D366";
+            setTimeout(() => { btn.innerText = "Añadir al Carrito"; btn.style.backgroundColor = ""; }, 2000);
+        }
+        function renderCart() {
+            cartItemsContainer.innerHTML = cart.length ? cart.map(item => `<div style="display:flex; margin-bottom:10px; align-items:center;"><img src="${item.image}" style="width:50px; height:50px; border-radius:5px; margin-right:10px;"><div><b>${item.title}</b><br>$${item.price} x ${item.quantity || 1}</div></div>`).join('') : '<p>Carrito vacío</p>';
+        }
+        cartBtn.addEventListener('click', (e) => { e.preventDefault(); openCart(); });
+        closeCartBtn.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', closeCart);
+
+        // Menú Móvil y Scroll
+        const mobileMenuBtn = document.querySelector('.menu-toggle');
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                document.querySelector('nav').classList.toggle('active');
+            });
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('nav');
+                if (nav.classList.contains('active')) nav.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>

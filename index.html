@@ -1,0 +1,2952 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belleza Celestial - Tienda Online</title>
+    <link rel="icon" href="logo2.png" type="image/png">
+    <style>
+        :root {
+            /* Paleta de colores solicitada */
+            --primary-color: #0056b3; /* Azul celestial */
+            --secondary-color: #ffffff; /* Blanco */
+            --accent-color: #e3f2fd; /* Azul muy claro para fondos suaves */
+            --text-color: #333333;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        body.dark-mode {
+            --primary-color: #0d47a1;
+            --secondary-color: #1e1e1e;
+            --secondary-color: #64b5f6;
+            --accent-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            overflow-x: hidden; /* Previene desbordamiento horizontal global */
+        }
+
+        /* Encabezado */
+        header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Hero / Banner Principal */
+        .hero {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .carousel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Capa oscura para leer mejor el texto */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 61, 128, 0.6);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Cuadrícula de Productos */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .category-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .subcategory-title {
+            font-size: 1.4rem;
+            color: #555;
+            margin: 1rem 0 1rem 1rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            position: relative;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s, transform 0.3s;
+            overflow: hidden; /* Evita que el contenido desborde la tarjeta */
+        }
+
+        .product-card:hover {
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            transform: translateY(-5px);
+        }
+
+        .product-title {
+            color: var(--primary-color);
+            margin: 1rem 0 0.5rem;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .btn-add {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-add:hover {
+            background-color: #003d80;
+        }
+
+        /* Pie de página */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            text-align: center;
+            padding: 2rem;
+            margin-top: auto;
+        }
+
+        /* Estilos para la nueva sección del footer */
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+            text-align: center;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            font-size: 1.8rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--secondary-color);
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+            opacity: 0.9;
+        }
+
+        .btn-whatsapp {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+        }
+
+        /* Estilos del Carrito Deslizante */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cart-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px; /* Oculto inicialmente */
+            width: 350px;
+            max-width: 100%;
+            height: 100%;
+            background: var(--card-bg);
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1200; /* Mayor que el header (1100) para que no se tape el botón */
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .cart-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .close-cart {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+            transition: color 0.2s;
+        }
+
+        .close-cart:hover {
+            color: var(--primary-color);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .cart-item-price {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .remove-item {
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            transition: transform 0.2s;
+        }
+
+        .remove-item:hover {
+            transform: scale(1.2);
+        }
+
+        .cart-footer {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: auto;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-clear {
+            background-color: transparent;
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-clear:hover {
+            background-color: #ff4444;
+            color: white;
+        }
+
+        /* Botón Flotante de WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 900; /* Debajo del carrito (999) */
+            transition: transform 0.3s ease, background-color 0.3s;
+            text-decoration: none;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #128C7E;
+        }
+
+        /* Estilos del Buscador */
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        /* Estilos Promo Banner */
+        .promo-banner {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            background-color: #f0f0f0;
+        }
+        .promo-slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 1s;
+            background-size: cover; background-position: center;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .promo-slide.active { opacity: 1; }
+        .promo-content {
+            z-index: 2; color: white; text-align: center;
+            background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px;
+        }
+
+        .countdown {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 15px;
+            background: rgba(220, 53, 69, 0.8); /* Rojo urgencia */
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Estilos Productos Destacados */
+        .featured-scroll {
+            display: flex; overflow-x: auto; gap: 20px; padding: 10px 0 20px; scroll-behavior: smooth;
+        }
+        .featured-scroll::-webkit-scrollbar { height: 8px; }
+        .featured-scroll::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 4px; }
+        .featured-scroll .product-card { min-width: 250px; flex: 0 0 auto; }
+
+        /* Botones de Navegación Destacados */
+        .featured-wrapper {
+            position: relative;
+        }
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.2s, background-color 0.3s;
+        }
+        .scroll-btn:hover {
+            background-color: #003d80;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .scroll-btn.left { left: -10px; }
+        .scroll-btn.right { right: -10px; }
+        
+        /* Layout Catálogo con Barra Lateral */
+        .catalog-wrapper {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .catalog-sidebar {
+            flex: 0 0 250px;
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 100px;
+        }
+
+        .catalog-content {
+            flex: 1;
+        }
+
+        .sidebar-filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-filter-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .sidebar-input, .sidebar-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: var(--accent-color);
+            color: var(--text-color);
+        }
+
+        #sort-container {
+            /* display: none; is set via inline style for initial state */
+            margin-bottom: 1.5rem;
+        }
+
+        /* Filtro de Precios */
+        .sort-container {
+            text-align: right;
+            margin-bottom: 1rem;
+            padding: 0 2rem;
+        }
+
+        /* Paginación */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Botón Wishlist en Tarjeta */
+        .wishlist-btn-card {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: #ccc;
+            transition: all 0.3s;
+            z-index: 5;
+        }
+
+        .wishlist-btn-card:hover {
+            transform: scale(1.1);
+        }
+
+        .wishlist-btn-card.active {
+            color: #ff4444;
+        }
+
+        /* Etiquetas de Producto (Tags) */
+        .product-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            z-index: 2;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .tag-nuevo { background-color: #00C853; }
+        .tag-oferta { background-color: #ff4444; }
+
+        /* Menú Hamburguesa */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-filter-group {
+            display: none; /* Oculto en escritorio, visible solo en móvil */
+        }
+        
+        /* Estilos Menú Acordeón Móvil */
+        nav details summary { cursor: pointer; list-style: none; padding: 5px 0; font-weight: bold; color: var(--text-light); }
+        nav details summary::-webkit-details-marker { display: none; }
+        nav details ul { padding-left: 15px; margin-top: 5px; display: flex; flex-direction: column; gap: 5px; }
+        nav details ul li a { font-weight: normal; font-size: 0.95rem; opacity: 0.9; color: var(--text-light); }
+
+        /* Optimización Móvil (Responsive) */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px 4rem; /* Ajuste fino para móviles */
+                overflow-x: hidden; /* Previene scroll horizontal indeseado */
+            }
+
+            header {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 10px 20px;
+                position: relative;
+                position: sticky;
+                top: 0;
+                z-index: 1100;
+            }
+            
+            .logo { 
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 10;
+            }
+            
+            .menu-toggle {
+                display: block;
+                order: 1;
+            }
+
+            .search-container {
+                order: 3; /* A la derecha */
+                margin: 0 10px;
+                width: auto;
+                flex: 0;
+                margin-left: auto;
+            }
+
+            .search-input {
+                display: none; /* Oculto inicialmente */
+                position: fixed;
+                top: 75px;
+                left: 5%;
+                width: 90%;
+                z-index: 100;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+
+            .search-container.active .search-input {
+                display: block;
+            }
+
+            .search-icon {
+                position: static;
+                transform: none;
+                font-size: 1.2rem;
+                color: var(--secondary-color);
+                cursor: pointer;
+                padding: 10px;
+            }
+
+            nav {
+                order: 4;
+                width: 100%;
+                display: none; /* Oculto por defecto */
+                margin-top: 1rem;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: var(--primary-color);
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                max-height: calc(100vh - 60px);
+                overflow-y: auto;
+            }
+            
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+                font-size: 0.9rem;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.1); /* Fondo ligero para distinguir */
+                background: transparent;
+                padding: 1rem;
+                border-radius: 5px;
+            }
+
+            .hero {
+                height: 300px; /* Altura reducida en móviles */
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .promo-banner {
+                height: 200px;
+            }
+
+            .catalog-wrapper {
+                flex-direction: column;
+            }
+
+            .catalog-sidebar {
+                display: none;
+            }
+
+            .cart-sidebar {
+                width: 100%; /* Ocupar toda la pantalla en móvil */
+                right: -100%;
+            }
+
+            .nav-filter-group {
+                display: block;
+                padding: 10px;
+                border-top: 1px solid rgba(255,255,255,0.2);
+            }
+
+            .nav-filter-group label {
+                display: block;
+                color: var(--text-light);
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            .nav-filter-group .sidebar-select {
+                width: 100%;
+                background-color: var(--accent-color);
+                color: var(--text-color);
+            }
+
+            /* Productos en 2 columnas para móvil */
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px; /* Gap reducido para evitar desbordamiento */
+            }
+
+            .product-card {
+                padding: 8px;
+            }
+
+            .cart-icon-header {
+                order: 4;
+            }
+        }
+
+        .dark-mode-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background-color: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: toastIn 0.3s forwards, toastOut 0.3s forwards 2.7s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.success { background-color: #25D366; }
+        .toast.info { background-color: var(--primary-color); }
+
+        @keyframes toastIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes toastOut {
+            to { opacity: 0; transform: translateY(20px); }
+        }
+
+        /* Modal Vista Rápida */
+        .modal-overlay-qv {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1500;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay-qv.active { display: flex; }
+
+        .modal-content-qv {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            gap: 2rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close-qv {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .quick-view-btn {
+            position: absolute;
+            top: 55px; /* Debajo del botón de wishlist */
+            right: 10px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: var(--primary-color);
+            transition: all 0.3s;
+            z-index: 5;
+        }
+
+        .quick-view-btn:hover { transform: scale(1.1); }
+
+        @media (max-width: 768px) {
+            .modal-content-qv { flex-direction: column; }
+        }
+
+        /* Estilos para Zoom y Reseñas en Modal */
+        .zoom-container {
+            flex: 1;
+            min-width: 250px;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: crosshair;
+            position: relative;
+        }
+
+        .zoom-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.1s ease-out;
+            display: block;
+        }
+
+        .reviews-section {
+            width: 100%;
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .review-list {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 5px;
+        }
+        .review-list::-webkit-scrollbar { width: 5px; }
+        .review-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 5px; }
+
+        .review-item { background: #f9f9f9; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9rem; text-align: left; }
+        .review-header { display: flex; justify-content: space-between; color: #777; margin-bottom: 5px; font-size: 0.8rem; }
+        
+        .star-rating { color: #ddd; font-size: 1.5rem; cursor: pointer; margin-bottom: 10px; display: inline-block; }
+        .star-rating .active { color: #ffc107; }
+
+        /* Estilos Chatbot */
+        .chat-toggle {
+            position: fixed; bottom: 20px; left: 20px;
+            background-color: var(--primary-color); color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer; z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .chat-toggle:hover { transform: scale(1.1); }
+        
+        .chat-window {
+            position: fixed; bottom: 90px; left: 20px;
+            width: 300px; height: 400px;
+            background: white; border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1000; display: none; flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-window.active { display: flex; }
+        
+        .chat-header { background: var(--primary-color); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .chat-input-area { padding: 10px; border-top: 1px solid #eee; display: flex; gap: 5px; }
+        .chat-input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        .chat-send { background: var(--primary-color); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
+        
+        .message { max-width: 80%; padding: 8px 12px; border-radius: 15px; font-size: 0.9rem; }
+        .message.bot { background: #e3f2fd; align-self: flex-start; border-bottom-left-radius: 2px; color: #333; }
+        .message.user { background: var(--primary-color); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+        /* Controles Cantidad Carrito */
+        .qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qty-btn { 
+            background: #eee; border: none; width: 25px; height: 25px; 
+            border-radius: 50%; cursor: pointer; font-weight: bold; color: #555;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .qty-btn:hover { background: #ddd; }
+
+        /* Sección Vistos Recientemente */
+        .recent-section {
+            padding: 2rem 0;
+            background: #f8f9fa;
+            margin-top: 2rem;
+        }
+        .recent-grid {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        .recent-grid::-webkit-scrollbar { height: 6px; }
+        .recent-grid::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+        .recent-card { min-width: 200px; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; }
+
+        /* Estilos Auth y Pagos */
+        .modal-form { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+        .form-group label { font-weight: bold; font-size: 0.9rem; color: var(--text-color); }
+        .form-group input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: var(--card-bg); color: var(--text-color); }
+        
+        .auth-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #eee; width: 100%; }
+        .auth-tab { padding: 10px; cursor: pointer; opacity: 0.6; font-weight: bold; flex: 1; text-align: center; }
+        .auth-tab.active { opacity: 1; border-bottom: 2px solid var(--primary-color); color: var(--primary-color); }
+        
+        .user-menu { position: relative; }
+        .user-dropdown { position: absolute; top: 100%; right: 0; background: var(--card-bg); color: var(--text-color); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 5px; display: none; min-width: 150px; z-index: 1001; }
+        .user-dropdown.active { display: block; }
+        /* Corrección para que los enlaces del menú de usuario sean visibles */
+        .user-dropdown a {
+            color: var(--text-color) !important;
+            display: block;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .user-dropdown a:hover { background-color: #f5f5f5; }
+
+        /* Estilos Perfil y Cupones */
+        .order-list { max-height: 300px; overflow-y: auto; width: 100%; }
+        .order-item { border: 1px solid #eee; padding: 10px; border-radius: 5px; margin-bottom: 10px; background: #f9f9f9; }
+        .order-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; color: var(--primary-color); }
+        .order-details { font-size: 0.9rem; color: #666; }
+        
+        .coupon-section { display: flex; gap: 10px; margin-bottom: 15px; align-items: center; }
+        .coupon-input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn-apply { background: #333; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .btn-apply:hover { background: #555; }
+
+        /* Spinner de Carga */
+        .spinner {
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 2px solid #fff;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Estilos FAQ y Mapa (Index) */
+        .accordion-item { border-bottom: 1px solid #ddd; margin-bottom: 10px; border-radius: 5px; overflow: hidden; background: var(--card-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .accordion-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--primary-color); transition: background 0.3s; }
+        .accordion-header:hover { background: var(--accent-color); }
+        .accordion-header i { transition: transform 0.3s; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s; background: #fff; color: #555; line-height: 1.6; }
+        
+        .accordion-item.active .accordion-content { max-height: 300px; padding: 15px 20px; border-top: 1px solid #eee; }
+        .accordion-item.active .accordion-header { background: var(--accent-color); }
+        .accordion-item.active .accordion-header i { transform: rotate(180deg); }
+
+        /* Estilos para el icono del carrito en el header */
+        .cart-icon-header {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            text-decoration: none;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Estilos Nuevos para Perfil Avanzado */
+        .address-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; position: relative; background: #fff; }
+        .address-actions { position: absolute; top: 10px; right: 10px; }
+        .address-actions i { cursor: pointer; margin-left: 10px; color: #777; transition: color 0.3s; }
+        .address-actions i:hover { color: var(--primary-color); }
+        
+        .mini-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 15px; }
+        .mini-product-card { border: 1px solid #eee; border-radius: 8px; padding: 10px; text-align: center; transition: transform 0.2s; background: white; }
+        .mini-product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .mini-product-card img { width: 100%; height: 100px; object-fit: cover; border-radius: 5px; margin-bottom: 8px; }
+        .mini-product-card h4 { font-size: 0.9rem; margin-bottom: 5px; color: var(--text-color); height: 40px; overflow: hidden; }
+        .mini-product-card .price { font-size: 1rem; margin-bottom: 8px; }
+        .mini-product-card .btn-add { padding: 5px; font-size: 0.8rem; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="logo1.png" alt="Belleza Celestial">
+        </div>
+        <button class="menu-toggle" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <div class="search-container" id="search-container">
+            <i class="fas fa-search search-icon" id="search-icon-btn"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Buscar productos...">
+        </div>
+        <a href="#" id="cart-btn" class="cart-icon-header">
+            <i class="fas fa-shopping-cart"></i> 
+            <span id="cart-count" style="background: white; color: var(--primary-color); padding: 2px 6px; border-radius: 50%; font-size: 0.8rem; margin-left: 5px;">0</span>
+        </a>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#catalogo">Productos</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+                
+                <!-- Filtro Integrado en Menú Móvil (Restaurado) -->
+                <li class="nav-filter-group">
+                    <label for="category-filter">Filtrar por Categoría</label>
+                    <select id="category-filter" class="sidebar-select">
+                        <option value="all">Ver Todas</option>
+                        <optgroup label="Maquillaje">
+                            <option value="Maquillaje">Ver Todo Maquillaje</option>
+                            <option value="Labiales">Labiales</option>
+                            <option value="Bases">Bases</option>
+                            <option value="Sombras">Sombras</option>
+                            <option value="Rubores">Rubores</option>
+                        </optgroup>
+                        <optgroup label="Accesorios">
+                            <option value="Accesorios Cabello">Ver Todo Accesorios</option>
+                            <option value="Gomitas">Gomitas</option>
+                            <option value="Hebillas">Hebillas</option>
+                        </optgroup>
+                        <optgroup label="Cuidado Personal">
+                            <option value="Cremas y Aceites">Ver Todo Cremas y Aceites</option>
+                            <option value="Perfumes">Ver Todo Perfumes</option>
+                        </optgroup>
+                        <optgroup label="Otros">
+                            <option value="Bijouterie">Ver Toda Bijouterie</option>
+                            <option value="Regalería">Ver Todo Regalería</option>
+                        </optgroup>
+                    </select>
+                </li>
+                
+                <li><a href="#" id="wishlist-nav-btn"><i class="fas fa-heart"></i></a></li>
+                <li><button class="dark-mode-btn" id="dark-mode-toggle"><i class="fas fa-moon"></i></button></li>
+                <li class="user-menu">
+                    <a href="#" id="auth-btn" onclick="openAuthModal()"><i class="fas fa-user"></i></a>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <span style="display:block; padding:10px; font-weight:bold; border-bottom:1px solid #eee;" id="user-name-display">Usuario</span>
+                        <a href="#" onclick="openProfileModal()">Mi Perfil</a>
+                        <!-- Link Admin oculto por defecto -->
+                        <a href="admin.html" id="admin-link" style="display:none; color: var(--primary-color); font-weight: bold;">Panel Admin</a>
+                        <a href="#" onclick="logout()">Cerrar Sesión</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="carousel">
+            <div class="slide active" style="background-image: url('https://via.placeholder.com/1920x600/0056b3/ffffff?text=Belleza+Celestial');"></div>
+            <div class="slide" style="background-image: url('https://via.placeholder.com/1920x600/003d80/ffffff?text=Cosmetica+Natural');"></div>
+            <div class="slide" style="background-image: url('https://via.placeholder.com/1920x600/e3f2fd/0056b3?text=Tu+Esencia');"></div>
+        </div>
+        <div class="hero-content">
+            <h1>Descubre tu Esencia</h1>
+            <p>Productos cosméticos inspirados en la pureza del cielo.</p>
+            <a href="#" class="btn">Ver Colección</a>
+        </div>
+    </section>
+
+    <!-- Carrusel de Promociones -->
+    <section class="promo-banner">
+        <div class="promo-slide active" style="background-image: url('https://via.placeholder.com/1920x400/ffb6c1/333?text=Oferta+Primavera');">
+            <div class="promo-content">
+                <h2>20% OFF en Labiales</h2>
+                <p>Solo por tiempo limitado</p>
+                <div id="countdown" class="countdown">Cargando...</div>
+            </div>
+        </div>
+        <div class="promo-slide" style="background-image: url('https://via.placeholder.com/1920x400/b0e0e6/333?text=Envio+Gratis');">
+            <div class="promo-content">
+                <h2>Envío Gratis</h2>
+                <p>En compras superiores a $50</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Carrusel de Productos Destacados -->
+    <section class="container">
+        <h2 class="section-title">Destacados del Mes</h2>
+        <div class="featured-wrapper">
+            <button class="scroll-btn left" id="scroll-left"><i class="fas fa-chevron-left"></i></button>
+            <div class="featured-scroll" id="featured-scroll">
+            <article class="product-card">
+                <img src="https://via.placeholder.com/200/e3f2fd/0056b3?text=Kit+Inicial" alt="Kit Inicial" style="width:100%; border-radius:5px;" loading="lazy">
+                <h3 class="product-title">Kit Inicial</h3>
+                <p class="price">$45.00</p>
+                <button class="btn-add" onclick="addToCart('Kit Inicial', '45.00', 'https://via.placeholder.com/200/e3f2fd/0056b3?text=Kit+Inicial', this)">Añadir al Carrito</button>
+            </article>
+            <article class="product-card">
+                <img src="https://via.placeholder.com/200/e3f2fd/0056b3?text=Serum+Noche" alt="Serum Noche" style="width:100%; border-radius:5px;" loading="lazy">
+                <h3 class="product-title">Serum Noche</h3>
+                <p class="price">$30.00</p>
+                <button class="btn-add" onclick="addToCart('Serum Noche', '30.00', 'https://via.placeholder.com/200/e3f2fd/0056b3?text=Serum+Noche', this)">Añadir al Carrito</button>
+            </article>
+            <article class="product-card">
+                <img src="https://via.placeholder.com/200/e3f2fd/0056b3?text=Mascarilla+Oro" alt="Mascarilla Oro" style="width:100%; border-radius:5px;" loading="lazy">
+                <h3 class="product-title">Mascarilla Oro</h3>
+                <p class="price">$22.00</p>
+                <button class="btn-add" onclick="addToCart('Mascarilla Oro', '22.00', 'https://via.placeholder.com/200/e3f2fd/0056b3?text=Mascarilla+Oro', this)">Añadir al Carrito</button>
+            </article>
+            <article class="product-card">
+                <img src="https://via.placeholder.com/200/e3f2fd/0056b3?text=Crema+Dia" alt="Crema Dia" style="width:100%; border-radius:5px;" loading="lazy">
+                <h3 class="product-title">Crema Día</h3>
+                <p class="price">$28.00</p>
+                <button class="btn-add" onclick="addToCart('Crema Día', '28.00', 'https://via.placeholder.com/200/e3f2fd/0056b3?text=Crema+Dia', this)">Añadir al Carrito</button>
+            </article>
+            </div>
+            <button class="scroll-btn right" id="scroll-right"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <main class="container" id="catalogo">
+        <h2 class="section-title">Catálogo</h2>
+        
+        <div class="catalog-wrapper">
+            <!-- Barra Lateral (Desktop) -->
+            <aside class="catalog-sidebar">
+                <div class="sidebar-filter-group">
+                    <label for="category-filter-desktop">Categorías</label>
+                    <select id="category-filter-desktop" class="sidebar-select">
+                        <option value="all">Todas</option>
+                        <optgroup label="Accesorios Cabello">
+                            <option value="Accesorios Cabello">Ver Todo Accesorios</option>
+                            <option value="Accesorios Trenzas">Accesorios para Trenzas</option>
+                            <option value="Gomitas">Gomitas</option>
+                            <option value="Hebillas">Hebillas</option>
+                            <option value="Moños">Moños</option>
+                            <option value="Peines">Peines</option>
+                            <option value="Vinchas">Vinchas</option>
+                        </optgroup>
+                        <optgroup label="Bijouterie">
+                            <option value="Bijouterie">Ver Toda Bijouterie</option>
+                            <option value="Acero Blanco">Acero Blanco</option>
+                            <option value="Acero Dorado">Acero Dorado</option>
+                            <option value="Acero Quirurgico">Acero Quirúrgico</option>
+                            <option value="Fantasia">Fantasía</option>
+                            <option value="Oro">Oro</option>
+                            <option value="Plata 925">Plata 925</option>
+                        </optgroup>
+                        <optgroup label="Cremas y Aceites">
+                            <option value="Cremas y Aceites">Ver Todo Cremas y Aceites</option>
+                            <option value="Corporales">Corporales</option>
+                            <option value="Cuidado del Cabello">Cuidado del Cabello</option>
+                            <option value="Masajes">Masajes</option>
+                            <option value="Para Rostro">Para Rostro</option>
+                        </optgroup>
+                        <optgroup label="Maquillaje">
+                            <option value="Maquillaje">Ver Todo Maquillaje</option>
+                            <option value="Bases">Bases</option>
+                            <option value="Correctores">Correctores</option>
+                            <option value="Delineadores">Delineadores</option>
+                            <option value="Fijadores">Fijadores</option>
+                            <option value="Iluminadores">Iluminadores</option>
+                            <option value="Labiales">Labiales</option>
+                            <option value="Mascara">Máscaras</option>
+                            <option value="Polvos">Polvos</option>
+                            <option value="Removedores">Removedores</option>
+                            <option value="Rubores">Rubores</option>
+                            <option value="Sombras">Sombras</option>
+                        </optgroup>
+                        <optgroup label="Perfumes">
+                            <option value="Perfumes">Ver Todo Perfumes</option>
+                            <option value="Perfumes">Perfumes</option>
+                        </optgroup>
+                        <optgroup label="Regalería">
+                            <option value="Regalería">Ver Todo Regalería</option>
+                            <option value="Auriculares">Auriculares</option>
+                            <option value="Juguetes">Juguetes</option>
+                            <option value="Relojes">Relojes</option>
+                            <option value="Termos">Termos</option>
+                            <option value="Vasos">Vasos</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </aside>
+
+            <!-- Contenido del Catálogo -->
+            <div class="catalog-content">
+                <div id="sort-container" style="display: none; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <button id="clear-filters-btn" class="btn-add" style="width: auto; background-color: #777; padding: 8px 15px; font-size: 0.9rem;">
+                            <i class="fas fa-times"></i> Limpiar Filtros
+                        </button>
+                        <div>
+                            <label for="price-sort" style="margin-right: 5px; font-weight: bold; color: var(--primary-color);">Ordenar:</label>
+                            <select id="price-sort" class="sidebar-select" style="width: auto; display: inline-block; padding: 5px;">
+                                <option value="default">Defecto</option>
+                                <option value="asc">Menor a Mayor</option>
+                                <option value="desc">Mayor a Menor</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="subcategory-title" id="subcategory-title">Todos los Productos</h4>
+                
+                <div class="product-grid" id="catalog-grid">
+                    <!-- Los productos se cargarán dinámicamente aquí -->
+                </div>
+                
+                <!-- Controles de Paginación -->
+                <div class="pagination" id="pagination-controls"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Sección Productos Vistos Recientemente -->
+    <section class="recent-section" id="recent-section" style="display: none;">
+        <h2 class="section-title" style="font-size: 1.5rem; margin-bottom: 1rem;">Vistos Recientemente</h2>
+        <div class="container recent-grid" id="recent-grid"></div>
+    </section>
+
+    <!-- Sección FAQ y Mapa -->
+    <section class="container" style="margin-top: 3rem; margin-bottom: 3rem;">
+        <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+            <!-- FAQ -->
+            <div style="flex: 1; min-width: 300px;">
+                <h2 class="section-title" style="text-align: left; font-size: 1.8rem;">Preguntas Frecuentes</h2>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">¿Realizan envíos a todo el país? <i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content"><p>Sí, realizamos envíos a todo el territorio nacional a través de correo privado. El tiempo de entrega varía según la ubicación.</p></div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">¿Cuáles son los medios de pago? <i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content"><p>Aceptamos tarjetas de crédito, débito, transferencias bancarias y efectivo en puntos de pago autorizados.</p></div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">¿Los productos tienen garantía? <i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content"><p>Absolutamente. Todos nuestros productos son 100% originales y cuentan con garantía de satisfacción.</p></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Mapa -->
+            <div style="flex: 1; min-width: 300px;">
+                <h2 class="section-title" style="text-align: left; font-size: 1.8rem;">Nuestra Ubicación</h2>
+                <div style="width: 100%; height: 300px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <div style="width: 100%; height: 300px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative;">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3539.446866366366!2d-58.1526271!3d-26.1251196!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x945ca516013eb77b%3A0xb06c2d2bb43093c7!2sBelleza%20Celestial!5e0!3m2!1ses!2sar!4v1706200000000!5m2!1ses!2sar" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=-26.1251196,-58.1526271" target="_blank" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;" title="Ver cómo llegar"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Atención al Cliente</h3>
+                <p>¿Tienes consultas sobre nosotros, productos o envíos?</p>
+                <p>Estamos aquí para ayudarte.</p>
+                <a href="https://wa.me/message/SECRN4W7JB2AK1" class="btn-whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Consultar por WhatsApp
+                </a>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/share/1DBrKNRitr/?mibextid=wwXIfr" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/bellezacelestia_?igsh=MWxkOWNhb3kwaWY3Ng%" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/message/SECRN4W7JB2AK1" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <p style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem;">&copy; 2024 Belleza Celestial. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Estructura del Carrito -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Tu Carrito</h2>
+            <span class="close-cart" id="close-cart"><i class="fas fa-times"></i></span>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Los productos se agregarán aquí dinámicamente -->
+            <p style="text-align: center; color: #777; margin-top: 20px;">Tu carrito está vacío.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="total">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button class="btn-add" onclick="checkout()">Finalizar Compra</button>
+            <button class="btn-clear" id="clear-cart">Vaciar Carrito</button>
+        </div>
+    </aside>
+
+    <!-- Sidebar Wishlist (Lista de Deseos) -->
+    <aside class="cart-sidebar" id="wishlist-sidebar">
+        <div class="cart-header">
+            <h2>Mis Favoritos</h2>
+            <span class="close-cart" id="close-wishlist"><i class="fas fa-times"></i></span>
+        </div>
+        <div class="cart-items" id="wishlist-items">
+            <p style="text-align: center; color: #777; margin-top: 20px;">No tienes favoritos guardados.</p>
+        </div>
+        <div class="cart-footer">
+            <button class="btn-clear" onclick="clearWishlist()">Borrar Todo</button>
+        </div>
+    </aside>
+
+    <!-- Chatbot Widget -->
+    <div class="chat-toggle" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </div>
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <span>Asistente Celestial</span>
+            <i class="fas fa-times" style="cursor: pointer;" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="message bot">¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Escribe tu consulta..." onkeypress="handleChatInput(event)">
+            <button class="chat-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Modal Vista Rápida -->
+    <div class="modal-overlay-qv" id="qv-modal">
+        <div class="modal-content-qv">
+            <span class="modal-close-qv" onclick="closeQuickView()"><i class="fas fa-times"></i></span>
+            <div id="qv-content" style="display: flex; width: 100%; gap: 2rem; flex-wrap: wrap;"></div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay-qv" id="auth-modal">
+        <div class="modal-content-qv" style="max-width: 400px; flex-direction: column; align-items: center;">
+            <span class="modal-close-qv" onclick="closeAuthModal()"><i class="fas fa-times"></i></span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Iniciar Sesión</div>
+                <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Registrarse</div>
+            </div>
+            <form id="login-form" class="modal-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" required id="login-email">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" required id="login-pass">
+                </div>
+                <button type="submit" class="btn-add">Entrar</button>
+            </form>
+            <form id="register-form" class="modal-form" style="display: none;" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" required id="reg-name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" required id="reg-email">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" required id="reg-pass">
+                </div>
+                <button type="submit" class="btn-add">Registrarse</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay-qv" id="profile-modal">
+        <div class="modal-content-qv" style="max-width: 800px; flex-direction: column; height: 85vh;">
+            <span class="modal-close-qv" onclick="closeProfileModal()"><i class="fas fa-times"></i></span>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="color: var(--primary-color);">Mi Cuenta</h2>
+                <div id="user-points-display" style="background: var(--accent-color); padding: 10px; border-radius: 10px; margin-top: 10px; color: var(--primary-color); font-weight: bold; display: inline-block;"></div>
+            </div>
+
+            <!-- Navegación de Pestañas -->
+            <div class="auth-tabs" style="justify-content: center; margin-bottom: 20px;">
+                <div class="auth-tab active" onclick="switchProfileTab('data', this)">Mis Datos</div>
+                <div class="auth-tab" onclick="switchProfileTab('addresses', this)">Direcciones</div>
+                <div class="auth-tab" onclick="switchProfileTab('orders', this)">Pedidos</div>
+                <div class="auth-tab" onclick="switchProfileTab('recommendations', this)">Para Ti <i class="fas fa-star" style="color: gold; font-size: 0.8rem;"></i></div>
+            </div>
+
+            <div style="overflow-y: auto; flex: 1; padding: 5px;">
+                <!-- Sección: Mis Datos -->
+                <div id="profile-data" class="profile-section">
+                    <form onsubmit="updateUserData(event)" class="modal-form">
+                        <div class="form-group"><label>Nombre Completo</label><input type="text" id="edit-name" required></div>
+                        <div class="form-group"><label>Email (No editable)</label><input type="email" id="edit-email" disabled style="background: #eee;"></div>
+                        <div class="form-group"><label>Nueva Contraseña (Opcional)</label><input type="password" id="edit-pass" placeholder="Dejar en blanco para mantener la actual"></div>
+                        <button type="submit" class="btn-add">Guardar Cambios</button>
+                    </form>
+                </div>
+
+                <!-- Sección: Direcciones -->
+                <div id="profile-addresses" class="profile-section" style="display:none;">
+                    <div id="address-list"></div>
+                    <button class="btn-add" onclick="document.getElementById('add-address-form').style.display='flex'" style="margin-top: 15px; background: #555;">+ Nueva Dirección</button>
+                    
+                    <form id="add-address-form" class="modal-form" style="display:none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;" onsubmit="addNewAddress(event)">
+                        <h4 style="color: var(--primary-color);">Agregar Dirección</h4>
+                        <div class="form-group"><label>Alias (ej: Casa, Trabajo)</label><input type="text" id="addr-alias" required></div>
+                        <div class="form-group"><label>Dirección</label><input type="text" id="addr-street" required></div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="form-group" style="flex:1"><label>Ciudad</label><input type="text" id="addr-city" required></div>
+                            <div class="form-group" style="flex:1"><label>CP</label><input type="text" id="addr-zip" required></div>
+                        </div>
+                        <button type="submit" class="btn-add">Guardar Dirección</button>
+                    </form>
+                </div>
+
+                <!-- Sección: Pedidos -->
+                <div id="profile-orders" class="profile-section" style="display:none;">
+                    <div class="order-list" id="order-list"></div>
+                </div>
+
+                <!-- Sección: Recomendados -->
+                <div id="profile-recommendations" class="profile-section" style="display:none;">
+                    <p style="text-align: center; color: #666; margin-bottom: 15px;">Basado en tus compras recientes, creemos que te encantará:</p>
+                    <div class="mini-product-grid" id="recommendation-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay-qv" id="payment-modal">
+        <div class="modal-content-qv" style="max-width: 500px; flex-direction: column;">
+            <span class="modal-close-qv" onclick="closePaymentModal()"><i class="fas fa-times"></i></span>
+            <h2 style="color: var(--primary-color); margin-bottom: 20px; text-align: center;">Pago Seguro</h2>
+            <form id="payment-form" class="modal-form" onsubmit="handlePayment(event)">
+                <div class="form-group" id="address-selection-group" style="display:none; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
+                    <label style="color: var(--primary-color);">Seleccionar Dirección de Envío</label>
+                    <select id="shipping-address-select" class="sidebar-select" style="width: 100%; background: #f9f9f9;"><option value="">-- Elegir dirección guardada --</option></select>
+                </div>
+                <div class="form-group"><label>Titular de la Tarjeta</label><input type="text" required placeholder="Nombre como aparece en la tarjeta"></div>
+                <div class="form-group"><label>Número de Tarjeta</label><input type="text" required placeholder="0000 0000 0000 0000" maxlength="19"></div>
+                <div style="display: flex; gap: 10px;"><div class="form-group" style="flex: 1;"><label>Expiración</label><input type="text" required placeholder="MM/YY" maxlength="5"></div><div class="form-group" style="flex: 1;"><label>CVV</label><input type="text" required placeholder="123" maxlength="3"></div></div>
+                <div style="margin-top: 15px;">
+                    <div class="coupon-section">
+                        <input type="text" id="coupon-code" class="coupon-input" placeholder="Código de cupón (ej: DESC10)">
+                        <button type="button" class="btn-apply" onclick="applyCoupon()">Aplicar</button>
+                    </div>
+                    <div id="discount-display" style="color: #25D366; font-weight: bold; margin-bottom: 10px; display: none; text-align: right;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;"><span style="font-weight: bold; font-size: 1.2rem;">Total: <span id="payment-total-display">$0.00</span></span><button type="submit" class="btn-add" style="width: auto;">Pagar Ahora</button></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalElement = document.getElementById('cart-total');
+        const cartCountElement = document.getElementById('cart-count');
+        const clearCartBtn = document.getElementById('clear-cart');
+        // const addToCartButtons = document.querySelectorAll('.product-card .btn-add'); // Ya no se usa estático
+
+        let cart = JSON.parse(localStorage.getItem('belleza-celestial-cart')) || [];
+        let currentDiscount = 0;
+        let wishlist = JSON.parse(localStorage.getItem('belleza-celestial-wishlist')) || [];
+        let recentProducts = JSON.parse(localStorage.getItem('belleza-celestial-recent')) || [];
+
+        // Abrir Carrito
+        function openCart() {
+            cartOverlay.classList.add('active');
+            cartSidebar.classList.add('active');
+        }
+
+        // Cerrar Carrito
+        function closeCart() {
+            cartOverlay.classList.remove('active');
+            cartSidebar.classList.remove('active');
+        }
+
+        // Renderizar Carrito
+        function updateCart() {
+            localStorage.setItem('belleza-celestial-cart', JSON.stringify(cart));
+            
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #777; margin-top: 20px;">Tu carrito está vacío.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    total += parseFloat(item.price) * (item.quantity || 1);
+                    
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    cartItem.innerHTML = `
+                        <img src="${item.image}" alt="${item.title}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-price">$${item.price}</div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity || 1}</span>
+                                <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <i class="fas fa-trash remove-item" onclick="removeFromCart(${index})" title="Eliminar"></i>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                });
+            }
+
+            cartTotalElement.textContent = '$' + total.toFixed(2);
+            cartCountElement.textContent = cart.length;
+        }
+
+        // Agregar al Carrito
+        function addToCart(title, price, image, btnElement) {
+            const existingItem = cart.find(item => item.title === title);
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 1) + 1;
+            } else {
+                cart.push({ title, price, image, quantity: 1 });
+            }
+            updateCart();
+            showToast(`"${title}" añadido al carrito`);
+            
+            // Feedback Visual en el botón
+            if(btnElement) {
+                const originalText = btnElement.innerText;
+                const originalBg = btnElement.style.backgroundColor;
+                btnElement.innerText = "¡Añadido!";
+                btnElement.style.backgroundColor = "#25D366";
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.style.backgroundColor = originalBg;
+                }, 2000);
+            } else {
+                showToast(`"${title}" añadido al carrito`);
+            }
+        }
+
+        // Cambiar Cantidad
+        window.changeQuantity = (index, delta) => {
+            if (!cart[index].quantity) cart[index].quantity = 1;
+            cart[index].quantity += delta;
+            
+            if (cart[index].quantity <= 0) {
+                if(confirm("¿Eliminar producto del carrito?")) {
+                    cart.splice(index, 1);
+                } else {
+                    cart[index].quantity = 1;
+                }
+            }
+            updateCart();
+        }
+
+        // Eliminar Item
+        window.removeFromCart = (index) => {
+            cart.splice(index, 1);
+            updateCart();
+        };
+
+        // Función para finalizar compra por WhatsApp
+        function checkout() {
+            if (cart.length === 0) {
+                showToast("Tu carrito está vacío", "info");
+                return;
+            }
+            
+            // Calcular total para mostrar en el modal
+            let total = cart.reduce((sum, item) => sum + (parseFloat(item.price) * (item.quantity || 1)), 0);
+            document.getElementById('payment-total-display').textContent = '$' + total.toFixed(2);
+            
+            // Resetear cupón
+            currentDiscount = 0;
+            document.getElementById('coupon-code').value = '';
+            document.getElementById('discount-display').style.display = 'none';
+            
+            // Cargar direcciones guardadas
+            const addrGroup = document.getElementById('address-selection-group');
+            const addrSelect = document.getElementById('shipping-address-select');
+            
+            if (currentUser && currentUser.addresses && currentUser.addresses.length > 0) {
+                addrGroup.style.display = 'block';
+                addrSelect.innerHTML = '<option value="">-- Elegir dirección guardada --</option>';
+                currentUser.addresses.forEach((addr, index) => {
+                    addrSelect.innerHTML += `<option value="${index}">${addr.alias} - ${addr.street}, ${addr.city}</option>`;
+                });
+            } else {
+                addrGroup.style.display = 'none';
+            }
+
+            // Abrir modal de pago
+            closeCart();
+            document.getElementById('payment-modal').classList.add('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('active');
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('coupon-code').value.trim().toUpperCase();
+            const discountDisplay = document.getElementById('discount-display');
+            const totalDisplay = document.getElementById('payment-total-display');
+            
+            let subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price) * (item.quantity || 1)), 0);
+            let discount = 0;
+
+            if (code === 'DESC10') {
+                discount = subtotal * 0.10;
+                showToast("Cupón del 10% aplicado");
+            } else if (code === 'BELLEZA20') {
+                discount = subtotal * 0.20;
+                showToast("Cupón del 20% aplicado");
+            } else if (code === '') {
+                showToast("Ingresa un código", "info");
+                return;
+            } else {
+                showToast("Cupón inválido", "info");
+                currentDiscount = 0;
+                discountDisplay.style.display = 'none';
+                totalDisplay.textContent = '$' + subtotal.toFixed(2);
+                return;
+            }
+
+            currentDiscount = discount;
+            discountDisplay.style.display = 'block';
+            discountDisplay.textContent = `- $${discount.toFixed(2)}`;
+            totalDisplay.textContent = '$' + (subtotal - discount).toFixed(2);
+        }
+
+        function handlePayment(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner"></span> Procesando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Procesar pedido
+                const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price) * (item.quantity || 1)), 0);
+                const finalTotal = subtotal - currentDiscount;
+                
+                // Obtener dirección seleccionada
+                let shippingInfo = "Dirección no especificada";
+                const addrSelect = document.getElementById('shipping-address-select');
+                if (addrSelect && addrSelect.value !== "" && currentUser && currentUser.addresses[addrSelect.value]) {
+                    const addr = currentUser.addresses[addrSelect.value];
+                    shippingInfo = `${addr.street}, ${addr.city} (${addr.zip})`;
+                }
+
+                const newOrder = {
+                    id: Date.now(),
+                    date: new Date().toLocaleDateString(),
+                    items: [...cart],
+                    total: '$' + finalTotal.toFixed(2),
+                    userEmail: currentUser ? currentUser.email : 'guest',
+                    status: 'Pendiente', // Estado inicial para el admin
+                    shippingAddress: shippingInfo
+                };
+
+                // Guardar pedido
+                let orders = JSON.parse(localStorage.getItem('belleza_orders')) || [];
+                orders.push(newOrder);
+                localStorage.setItem('belleza_orders', JSON.stringify(orders));
+
+                // Sumar puntos si es usuario
+                if (currentUser) {
+                    const pointsEarned = Math.floor(finalTotal);
+                    currentUser.points = (currentUser.points || 0) + pointsEarned;
+                    localStorage.setItem('belleza_current_user', JSON.stringify(currentUser));
+                    
+                    // Actualizar lista de usuarios
+                    let users = JSON.parse(localStorage.getItem('belleza_users')) || [];
+                    const userIndex = users.findIndex(u => u.email === currentUser.email);
+                    if (userIndex !== -1) {
+                        users[userIndex].points = currentUser.points;
+                        localStorage.setItem('belleza_users', JSON.stringify(users));
+                    }
+                }
+
+                // Limpiar y cerrar
+                cart = [];
+                updateCart();
+                closePaymentModal();
+                showToast("¡Compra realizada con éxito!");
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                // Resetear formulario
+                e.target.reset();
+            }, 2000);
+        }
+
+        // --- LÓGICA DE PAGINACIÓN Y CATÁLOGO ---
+        
+        // Base de datos de productos ampliada con subcategorías
+        const productsData = [
+            { id: 1, category: 'Labiales', title: "Labial Mate Terciopelo", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Labial+Mate", tags: ['Nuevo'] },
+            { id: 2, category: 'Labiales', title: "Gloss Brillo Estelar", price: "12.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Gloss+Estelar", tags: ['Oferta'] },
+            { id: 3, category: 'Labiales', title: "Bálsamo Hidratante Rosa", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Balsamo+Rosa", tags: [] },
+            { id: 4, category: 'Rubores', title: "Rubor en Polvo Durazno", price: "18.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Rubor+Durazno", tags: ['Nuevo'] },
+            { id: 5, category: 'Rubores', title: "Rubor Líquido Pétalo", price: "20.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Rubor+Liquido", tags: [] },
+            { id: 6, category: 'Bases', title: "Base Cobertura Total", price: "25.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Base+Total", tags: ['Oferta'] },
+            { id: 7, category: 'Bases', title: "BB Cream Ligera", price: "18.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=BB+Cream", tags: [] },
+            { id: 8, category: 'Sombras', title: "Paleta Nude Classics", price: "35.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Paleta+Nude", tags: ['Nuevo'] },
+            { id: 9, category: 'Sombras', title: "Sombra Individual Shimmer", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Sombra+Shimmer", tags: [] },
+            { id: 10, category: 'Delineadores', title: "Delineador Líquido Negro", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Delineador+Liq", tags: [] },
+            { id: 11, category: 'Delineadores', title: "Lápiz de Ojos Marrón", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Lapiz+Ojos", tags: ['Oferta'] },
+            { id: 12, category: 'Mascara', title: "Máscara Volumen Extremo", price: "16.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Mascara+Vol", tags: ['Nuevo'] },
+            { id: 13, category: 'Mascara', title: "Máscara Waterproof", price: "17.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Mascara+Water", tags: [] },
+            { id: 14, category: 'Fijadores', title: "Spray Fijador Mate", price: "22.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Spray+Mate", tags: [] },
+            { id: 15, category: 'Fijadores', title: "Spray Fijador Dewy", price: "22.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Spray+Dewy", tags: ['Nuevo'] },
+            { id: 16, category: 'Removedores', title: "Agua Micelar Bifásica", price: "14.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Agua+Micelar", tags: ['Oferta'] },
+            { id: 17, category: 'Removedores', title: "Leche Limpiadora Suave", price: "16.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Leche+Limp", tags: [] },
+            { id: 18, category: 'Correctores', title: "Corrector Alta Cobertura", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Corrector+Alta", tags: [] },
+            { id: 19, category: 'Correctores', title: "Corrector Iluminador", price: "16.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Corrector+Ilum", tags: ['Nuevo'] },
+            { id: 20, category: 'Polvos', title: "Polvo Traslúcido HD", price: "24.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Polvo+HD", tags: [] },
+            { id: 21, category: 'Polvos', title: "Polvo Compacto Mate", price: "22.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Polvo+Mate", tags: ['Oferta'] },
+            { id: 22, category: 'Iluminadores', title: "Iluminador Líquido Gold", price: "19.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Ilum+Gold", tags: ['Nuevo'] },
+            { id: 23, category: 'Iluminadores', title: "Iluminador en Barra", price: "18.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Ilum+Barra", tags: [] },
+            // Accesorios para Cabello
+            { id: 24, category: 'Moños', title: "Moño de Satén Grande", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Mono+Saten", tags: ['Nuevo'] },
+            { id: 25, category: 'Moños', title: "Set de Moños Velvet", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Set+Monos", tags: [] },
+            { id: 26, category: 'Moños', title: "Moño con Lazos Largos", price: "6.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Mono+Lazos", tags: [] },
+            { id: 27, category: 'Moños', title: "Moño Estampado Floral", price: "4.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Mono+Floral", tags: ['Oferta'] },
+            { id: 28, category: 'Vinchas', title: "Vincha de Perlas", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vincha+Perlas", tags: ['Nuevo'] },
+            { id: 29, category: 'Vinchas', title: "Vincha Nudo Terciopelo", price: "9.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vincha+Nudo", tags: [] },
+            { id: 30, category: 'Vinchas', title: "Vincha Deportiva Elástica", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vincha+Sport", tags: [] },
+            { id: 31, category: 'Vinchas', title: "Vincha Rígida Satinada", price: "7.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vincha+Saten", tags: [] },
+            { id: 32, category: 'Peines', title: "Peine Desenredante Ancho", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Peine+Ancho", tags: [] },
+            { id: 33, category: 'Peines', title: "Peine de Bambú Natural", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Peine+Bambu", tags: ['Nuevo'] },
+            { id: 34, category: 'Peines', title: "Peine Cola de Ratón", price: "3.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Peine+Cola", tags: [] },
+            { id: 35, category: 'Peines', title: "Set de Peines Estilista", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Set+Peines", tags: ['Oferta'] },
+            { id: 36, category: 'Hebillas', title: "Hebillas Click-Clack Colores", price: "2.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hebillas+Click", tags: [] },
+            { id: 37, category: 'Hebillas', title: "Hebilla Francesa Carey", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hebilla+Carey", tags: [] },
+            { id: 38, category: 'Hebillas', title: "Hebillas con Strass", price: "6.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hebillas+Strass", tags: ['Nuevo'] },
+            { id: 39, category: 'Hebillas', title: "Hebilla Geométrica Metal", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hebilla+Metal", tags: [] },
+            { id: 40, category: 'Accesorios Trenzas', title: "Anillos para Trenzas Dorados", price: "3.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Anillos+Trenza", tags: [] },
+            { id: 41, category: 'Accesorios Trenzas', title: "Hilo Encerado para Trenzas", price: "2.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hilo+Trenza", tags: [] },
+            { id: 42, category: 'Accesorios Trenzas', title: "Cuentas de Madera Mix", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Cuentas+Madera", tags: [] },
+            { id: 43, category: 'Accesorios Trenzas', title: "Clips para Trenzas Plata", price: "3.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Clips+Plata", tags: ['Nuevo'] },
+            { id: 44, category: 'Gomitas', title: "Scrunchies de Seda", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Scrunchies", tags: ['Nuevo'] },
+            { id: 45, category: 'Gomitas', title: "Gomitas Invisibles Espiral", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Gomitas+Espiral", tags: [] },
+            { id: 46, category: 'Gomitas', title: "Gomitas Elásticas Negras", price: "2.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Gomitas+Negras", tags: [] },
+            { id: 47, category: 'Gomitas', title: "Gomitas de Felpa Suave", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Gomitas+Felpa", tags: ['Oferta'] },
+            // Bijouterie
+            { id: 48, category: 'Acero Blanco', title: "Cadena Acero Blanco Corazón", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Cadena+Corazon", tags: ['Nuevo'] },
+            { id: 49, category: 'Acero Blanco', title: "Pulsera Acero Blanco Estrellas", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Pulsera+Estrellas", tags: [] },
+            { id: 50, category: 'Acero Blanco', title: "Aros Argolla Acero Blanco", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Argolla", tags: [] },
+            { id: 51, category: 'Acero Blanco', title: "Anillo Acero Blanco Ajustable", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Anillo+Ajustable", tags: ['Oferta'] },
+            { id: 52, category: 'Acero Dorado', title: "Collar Acero Dorado Multicapa", price: "18.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Collar+Multicapa", tags: ['Nuevo'] },
+            { id: 53, category: 'Acero Dorado', title: "Aros Colgantes Dorados", price: "14.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Colgantes", tags: [] },
+            { id: 54, category: 'Acero Dorado', title: "Pulsera Rígida Dorada", price: "16.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Pulsera+Rigida", tags: [] },
+            { id: 55, category: 'Acero Dorado', title: "Tobillera Acero Dorado", price: "11.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Tobillera+Dorada", tags: [] },
+            { id: 56, category: 'Plata 925', title: "Cadena Plata 925 Finita", price: "25.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Cadena+Plata", tags: [] },
+            { id: 57, category: 'Plata 925', title: "Aros Abridores Plata", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Abridores", tags: ['Nuevo'] },
+            { id: 58, category: 'Plata 925', title: "Dije Plata 925 Luna", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Dije+Luna", tags: [] },
+            { id: 59, category: 'Plata 925', title: "Anillo Plata 925 Cintillo", price: "22.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Anillo+Cintillo", tags: [] },
+            { id: 60, category: 'Oro', title: "Aros Oro 18k Perla", price: "80.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Oro", tags: ['Nuevo'] },
+            { id: 61, category: 'Oro', title: "Cadena Oro Laminado", price: "45.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Cadena+Oro", tags: [] },
+            { id: 62, category: 'Oro', title: "Dije Oro Inicial", price: "30.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Dije+Inicial", tags: [] },
+            { id: 63, category: 'Oro', title: "Pulsera Oro Hilo Rojo", price: "35.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Pulsera+Hilo", tags: ['Oferta'] },
+            { id: 64, category: 'Acero Quirurgico', title: "Piercing Nariz Acero", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Piercing+Nariz", tags: [] },
+            { id: 65, category: 'Acero Quirurgico', title: "Aros Bolita Acero Q", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Bolita", tags: [] },
+            { id: 66, category: 'Acero Quirurgico', title: "Piercing Ombligo Strass", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Piercing+Ombligo", tags: [] },
+            { id: 67, category: 'Acero Quirurgico', title: "Expansor Acero Negro", price: "6.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Expansor+Negro", tags: [] },
+            { id: 68, category: 'Fantasia', title: "Collar Choker Colores", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Choker+Colores", tags: ['Oferta'] },
+            { id: 69, category: 'Fantasia', title: "Set de Anillos Midi", price: "7.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Set+Anillos", tags: [] },
+            { id: 70, category: 'Fantasia', title: "Aros Largos Flecos", price: "9.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aros+Flecos", tags: [] },
+            { id: 71, category: 'Fantasia', title: "Pulsera de la Amistad", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Pulsera+Amistad", tags: [] },
+            // Regalería
+            { id: 72, category: 'Relojes', title: "Reloj Digital Deportivo", price: "25.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Reloj+Digital", tags: ['Nuevo'] },
+            { id: 73, category: 'Relojes', title: "Reloj Analógico Clásico", price: "30.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Reloj+Analogico", tags: [] },
+            { id: 74, category: 'Juguetes', title: "Oso de Peluche Suave", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Oso+Peluche", tags: [] },
+            { id: 75, category: 'Juguetes', title: "Set de Arte Infantil", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Set+Arte", tags: [] },
+            { id: 76, category: 'Vasos', title: "Vaso Térmico Pastel", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vaso+Termico", tags: ['Oferta'] },
+            { id: 77, category: 'Vasos', title: "Taza Cerámica Diseño", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Taza+Ceramica", tags: [] },
+            { id: 78, category: 'Termos', title: "Termo Acero Inoxidable", price: "35.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Termo+Acero", tags: [] },
+            { id: 79, category: 'Termos', title: "Botella Deportiva", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Botella+Sport", tags: [] },
+            { id: 80, category: 'Auriculares', title: "Auriculares Inalámbricos", price: "20.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Auriculares+BT", tags: ['Nuevo'] },
+            { id: 81, category: 'Auriculares', title: "Auriculares Vincha", price: "18.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Auriculares+Vincha", tags: [] },
+            // Perfumes
+            { id: 82, category: 'Perfumes', title: "Perfume Floral Dulce", price: "40.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Perfume+Floral", tags: [] },
+            { id: 83, category: 'Perfumes', title: "Perfume Cítrico Fresco", price: "42.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Perfume+Citrico", tags: ['Nuevo'] },
+            { id: 84, category: 'Perfumes', title: "Body Splash Vainilla", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Body+Splash", tags: [] },
+            // Cremas y Aceites
+            { id: 85, category: 'Masajes', title: "Aceite de Almendras", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aceite+Almendras", tags: [] },
+            { id: 86, category: 'Masajes', title: "Aceite Esencial Lavanda", price: "14.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aceite+Lavanda", tags: [] },
+            { id: 87, category: 'Corporales', title: "Crema Corporal Karité", price: "16.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Crema+Karite", tags: ['Oferta'] },
+            { id: 88, category: 'Corporales', title: "Loción Hidratante Aloe", price: "14.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Locion+Aloe", tags: [] },
+            { id: 89, category: 'Cuidado del Cabello', title: "Aceite de Argán Capilar", price: "18.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Aceite+Argan", tags: [] },
+            { id: 90, category: 'Cuidado del Cabello', title: "Serum Reparador Puntas", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Serum+Puntas", tags: [] },
+            { id: 91, category: 'Para Rostro', title: "Crema Anti-Age Noche", price: "28.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Crema+AntiAge", tags: ['Nuevo'] },
+            { id: 92, category: 'Para Rostro', title: "Gel Limpiador Facial", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Gel+Limpiador", tags: [] }
+        ];
+
+        // Aplicar orden alfabético por título
+        productsData.sort((a, b) => a.title.localeCompare(b.title));
+
+        const itemsPerPage = 12;
+        let currentPage = 1;
+        const catalogGrid = document.getElementById('catalog-grid');
+        const paginationControls = document.getElementById('pagination-controls');
+        let currentCategory = 'all';
+
+        // Mapeo de Categorías Principales a Subcategorías
+        const categoryGroups = {
+            'Maquillaje': ['Bases', 'Correctores', 'Delineadores', 'Fijadores', 'Iluminadores', 'Labiales', 'Mascara', 'Polvos', 'Removedores', 'Rubores', 'Sombras'],
+            'Accesorios Cabello': ['Accesorios Trenzas', 'Gomitas', 'Hebillas', 'Moños', 'Peines', 'Vinchas'],
+            'Bijouterie': ['Acero Blanco', 'Acero Dorado', 'Acero Quirurgico', 'Fantasia', 'Oro', 'Plata 925'],
+            'Cremas y Aceites': ['Corporales', 'Cuidado del Cabello', 'Masajes', 'Para Rostro'],
+            'Perfumes': ['Perfumes'],
+            'Regalería': ['Auriculares', 'Juguetes', 'Relojes', 'Termos', 'Vasos']
+        };
+
+        function renderCatalog(page) {
+            catalogGrid.innerHTML = '';
+            
+            // Filtrar por categoría y búsqueda lateral
+            let filteredData = productsData;
+            
+            if (currentCategory !== 'all') {
+                if (categoryGroups[currentCategory]) {
+                    // Es una categoría principal, mostrar todas las subcategorías
+                    filteredData = productsData.filter(p => categoryGroups[currentCategory].includes(p.category));
+                } else {
+                    // Es una subcategoría específica
+                    filteredData = productsData.filter(p => p.category === currentCategory);
+                }
+            }
+            
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedItems = filteredData.slice(start, end);
+
+            paginatedItems.forEach(product => {
+                const isWishlisted = wishlist.some(item => item.id === product.id);
+                const heartClass = isWishlisted ? 'active' : '';
+
+                // Generar HTML de etiquetas
+                let tagsHtml = '';
+                if (product.tags && product.tags.length > 0) {
+                    tagsHtml = product.tags.map(tag => `<span class="product-tag tag-${tag.toLowerCase()}">${tag}</span>`).join('');
+                }
+
+                const article = document.createElement('article');
+                article.className = 'product-card';
+                article.innerHTML = `
+                    ${tagsHtml}
+                    <button class="wishlist-btn-card ${heartClass}" onclick="toggleWishlist(${product.id}, '${product.title}', '${product.price}', '${product.image}')">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="quick-view-btn" onclick="openQuickView(${product.id})">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <a href="detalle.html?id=${product.id}" style="text-decoration: none; color: inherit;">
+                        <img src="${product.image}" alt="${product.title}" style="width:100%; border-radius:5px;" loading="lazy">
+                        <h3 class="product-title">${product.title}</h3>
+                    </a>
+                    <p class="price">$${product.price}</p>
+                    <button class="btn-add" onclick="addToCart('${product.title}', '${product.price}', '${product.image}', this)">Añadir al Carrito</button>
+                `;
+                catalogGrid.appendChild(article);
+            });
+
+            renderPaginationControls(filteredData.length);
+        }
+
+        function renderPaginationControls(totalItems) {
+            paginationControls.innerHTML = '';
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            // Botón Anterior
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => { if(currentPage > 1) { currentPage--; renderCatalog(currentPage); } };
+            paginationControls.appendChild(prevBtn);
+
+            // Números de página
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.innerText = i;
+                btn.onclick = () => { currentPage = i; renderCatalog(currentPage); };
+                paginationControls.appendChild(btn);
+            }
+
+            // Botón Siguiente
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => { if(currentPage < totalPages) { currentPage++; renderCatalog(currentPage); } };
+            paginationControls.appendChild(nextBtn);
+        }
+
+        // --- LÓGICA DE WISHLIST ---
+        const wishlistSidebar = document.getElementById('wishlist-sidebar');
+        const wishlistItemsContainer = document.getElementById('wishlist-items');
+        const wishlistNavBtn = document.getElementById('wishlist-nav-btn');
+        const closeWishlistBtn = document.getElementById('close-wishlist');
+
+        function toggleWishlist(id, title, price, image) {
+            const index = wishlist.findIndex(item => item.id === id);
+            if (index === -1) {
+                wishlist.push({ id, title, price, image });
+                showToast("Añadido a favoritos");
+            } else {
+                wishlist.splice(index, 1);
+                showToast("Eliminado de favoritos", "info");
+            }
+            localStorage.setItem('belleza-celestial-wishlist', JSON.stringify(wishlist));
+            renderCatalog(currentPage); // Re-renderizar para actualizar corazones
+            renderWishlist();
+        }
+
+        function renderWishlist() {
+            wishlistItemsContainer.innerHTML = '';
+            if (wishlist.length === 0) {
+                wishlistItemsContainer.innerHTML = '<p style="text-align: center; color: #777; margin-top: 20px;">No tienes favoritos guardados.</p>';
+            } else {
+                wishlist.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'cart-item';
+                    div.innerHTML = `
+                        <img src="${item.image}" alt="${item.title}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-price">$${item.price}</div>
+                        </div>
+                        <i class="fas fa-trash remove-item" onclick="toggleWishlist(${item.id})"></i>
+                    `;
+                    wishlistItemsContainer.appendChild(div);
+                });
+            }
+        }
+
+        function clearWishlist() {
+            wishlist = [];
+            localStorage.setItem('belleza-celestial-wishlist', JSON.stringify(wishlist));
+            renderCatalog(currentPage);
+            renderWishlist();
+        }
+
+        wishlistNavBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            cartOverlay.classList.add('active'); // Usamos el mismo overlay
+            wishlistSidebar.classList.add('active');
+            renderWishlist();
+        });
+
+        closeWishlistBtn.addEventListener('click', () => {
+            cartOverlay.classList.remove('active');
+            wishlistSidebar.classList.remove('active');
+        });
+
+        // Buscador de Productos en Tiempo Real
+        const searchInput = document.getElementById('search-input');
+        
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            // Filtramos sobre los datos originales, no sobre el DOM paginado
+            if(searchTerm === '') {
+                renderCatalog(1); // Volver a la vista normal
+                paginationControls.style.display = 'flex';
+                return;
+            }
+            
+            const filtered = productsData.filter(p => p.title.toLowerCase().includes(searchTerm));
+            
+            // Renderizar resultados filtrados (sin paginación o paginación simple)
+            catalogGrid.innerHTML = '';
+            filtered.forEach(product => {
+                const isWishlisted = wishlist.some(item => item.id === product.id);
+                const heartClass = isWishlisted ? 'active' : '';
+                const article = document.createElement('article');
+                article.className = 'product-card';
+                article.innerHTML = `
+                    <button class="wishlist-btn-card ${heartClass}" onclick="toggleWishlist(${product.id}, '${product.title}', '${product.price}', '${product.image}')">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <a href="detalle.html?id=${product.id}" style="text-decoration: none; color: inherit;">
+                        <img src="${product.image}" alt="${product.title}" style="width:100%; border-radius:5px;" loading="lazy">
+                        <h3 class="product-title">${product.title}</h3>
+                    </a>
+                    <p class="price">$${product.price}</p>
+                    <button class="btn-add" onclick="addToCart('${product.title}', '${product.price}', '${product.image}', this)">Añadir al Carrito</button>
+                `;
+                catalogGrid.appendChild(article);
+            });
+            paginationControls.style.display = 'none'; // Ocultar paginación en búsqueda
+        });
+
+        // Filtro de Categorías
+        const categoryFilterMobile = document.getElementById('category-filter');
+        const categoryFilterDesktop = document.getElementById('category-filter-desktop');
+        const sortContainer = document.getElementById('sort-container');
+        const clearFiltersBtn = document.getElementById('clear-filters-btn');
+
+        function handleCategoryChange(e) {
+            const selectedValue = e.target.value;
+            currentCategory = selectedValue;
+
+            // Cerrar menú móvil automáticamente
+            const mainNav = document.getElementById('main-nav');
+            if (mainNav.classList.contains('active')) {
+                mainNav.classList.remove('active');
+            }
+
+            // Redirección a páginas principales
+            const categoryMap = {
+                'Maquillaje': 'maquillaje.html',
+                'Accesorios Cabello': 'accesorios.html',
+                'Cremas y Aceites': 'cremas.html',
+                'Perfumes': 'perfumes.html',
+                'Bijouterie': 'bijouterie.html',
+                'Regalería': 'regaleria.html'
+            };
+
+            if (categoryMap[selectedValue]) {
+                window.location.href = categoryMap[selectedValue];
+                return;
+            }
+            
+            // Sincronizar el otro filtro
+            if(e.target === categoryFilterMobile && categoryFilterDesktop) categoryFilterDesktop.value = selectedValue;
+            if(e.target === categoryFilterDesktop && categoryFilterMobile) categoryFilterMobile.value = selectedValue;
+
+            currentPage = 1;
+            const titleEl = document.getElementById('subcategory-title');
+            const selectedText = e.target.options[e.target.selectedIndex].text;
+            titleEl.textContent = selectedText;
+
+            if (currentCategory !== 'all') {
+                sortContainer.style.display = 'block';
+                document.title = `Belleza Celestial - ${selectedText}`;
+            } else {
+                sortContainer.style.display = 'none';
+                document.title = 'Belleza Celestial - Tienda Online';
+            }
+
+            renderCatalog(1);
+        }
+
+        if(categoryFilterMobile) categoryFilterMobile.addEventListener('change', handleCategoryChange);
+        if(categoryFilterDesktop) categoryFilterDesktop.addEventListener('change', handleCategoryChange);
+
+        if(clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', () => {
+                if(categoryFilterMobile) {
+                    categoryFilterMobile.value = 'all';
+                    categoryFilterMobile.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        // Filtro de Precios
+        const priceSort = document.getElementById('price-sort');
+        priceSort.addEventListener('change', function() {
+            const sortValue = this.value;
+            
+            if (sortValue === 'asc') {
+                productsData.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+            } else if (sortValue === 'desc') {
+                productsData.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+            } else {
+                productsData.sort((a, b) => a.id - b.id); // Orden por defecto
+            }
+            renderCatalog(1); // Volver a página 1 con nuevo orden
+        });
+
+        // Carrusel Automático Hero
+        const heroSlides = document.querySelectorAll('.hero .slide');
+        let currentHeroSlide = 0;
+        if(heroSlides.length > 0) {
+            setInterval(() => {
+                heroSlides[currentHeroSlide].classList.remove('active');
+                currentHeroSlide = (currentHeroSlide + 1) % heroSlides.length;
+                heroSlides[currentHeroSlide].classList.add('active');
+            }, 5000);
+        }
+
+        // Carrusel Automático Promociones
+        const promoSlides = document.querySelectorAll('.promo-slide');
+        let currentPromoSlide = 0;
+        if(promoSlides.length > 0) {
+            setInterval(() => {
+                promoSlides[currentPromoSlide].classList.remove('active');
+                currentPromoSlide = (currentPromoSlide + 1) % promoSlides.length;
+                promoSlides[currentPromoSlide].classList.add('active');
+            }, 4000);
+        }
+
+        // Temporizador de Cuenta Regresiva (Urgencia)
+        const countdownEl = document.getElementById('countdown');
+        // Establecemos la meta para 24 horas desde ahora (Demo)
+        const deadline = new Date().getTime() + (24 * 60 * 60 * 1000);
+
+        const timerInterval = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = deadline - now;
+
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (countdownEl) {
+                countdownEl.innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+                
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    countdownEl.innerHTML = "¡OFERTA EXPIRADA!";
+                }
+            }
+        }, 1000);
+
+        // Navegación Carrusel Destacados
+        const scrollContainer = document.getElementById('featured-scroll');
+        const scrollLeftBtn = document.getElementById('scroll-left');
+        const scrollRightBtn = document.getElementById('scroll-right');
+
+        if(scrollContainer && scrollLeftBtn && scrollRightBtn) {
+            scrollLeftBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+            scrollRightBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+        }
+
+        // Menú Hamburguesa
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mainNav = document.getElementById('main-nav');
+
+        if(mobileMenuBtn && mainNav) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+            });
+
+            // Cerrar menú al hacer scroll
+            window.addEventListener('scroll', () => {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                }
+            });
+        }
+
+        // Búsqueda Móvil
+        const searchIconBtn = document.getElementById('search-icon-btn');
+        const searchContainer = document.getElementById('search-container');
+        
+        if(searchIconBtn) {
+            searchIconBtn.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    searchContainer.classList.toggle('active');
+                    if (searchContainer.classList.contains('active')) {
+                        searchInput.focus();
+                    }
+                }
+            });
+
+            // Cerrar buscador al hacer scroll
+            window.addEventListener('scroll', () => {
+                if (searchContainer.classList.contains('active')) {
+                    searchContainer.classList.remove('active');
+                    searchInput.blur();
+                }
+            });
+
+            // Cerrar buscador al presionar Enter
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    searchContainer.classList.remove('active');
+                    searchInput.blur();
+                }
+            });
+        }
+
+        // Modo Oscuro
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            body.classList.add('dark-mode');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+        });
+
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${message}`;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Variables para Reseñas
+        let productReviews = JSON.parse(localStorage.getItem('belleza-celestial-reviews')) || {};
+        let currentStarRating = 0;
+
+        // Quick View Functions
+        function openQuickView(id) {
+            const product = productsData.find(p => p.id === id);
+            if(!product) return;
+            
+            addToRecent(product); // Agregar a vistos recientemente
+            
+            const modal = document.getElementById('qv-modal');
+            const content = document.getElementById('qv-content');
+            
+            content.innerHTML = `
+                <div class="zoom-container" id="qv-zoom-container">
+                    <img src="${product.image}" id="qv-zoom-img" alt="${product.title}">
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <h2 style="color: var(--primary-color); margin-bottom: 1rem;">${product.title}</h2>
+                    <p class="price" style="font-size: 1.5rem;">$${product.price}</p>
+                    <p style="margin-bottom: 1.5rem; color: #666;">Descubre la magia de ${product.title}. Un producto diseñado para resaltar tu belleza natural con ingredientes celestiales.</p>
+                    <button class="btn-add" onclick="addToCart('${product.title}', '${product.price}', '${product.image}'); closeQuickView();">Añadir al Carrito</button>
+                    <button class="btn-add" onclick="addToCart('${product.title}', '${product.price}', '${product.image}', this); setTimeout(closeQuickView, 1000);">Añadir al Carrito</button>
+                    <br><br>
+                    <a href="detalle.html?id=${product.id}" style="color: var(--primary-color); text-decoration: underline;">Ver detalles completos</a>
+                </div>
+                
+                <!-- Sección de Reseñas -->
+                <div class="reviews-section">
+                    <h3 style="margin-bottom: 10px; color: var(--primary-color);">Reseñas de Clientes</h3>
+                    <div class="review-list" id="qv-review-list"></div>
+                    
+                    <div style="background: var(--accent-color); padding: 15px; border-radius: 10px;">
+                        <h4 style="margin-bottom: 10px;">Deja tu opinión</h4>
+                        <div class="star-rating" id="qv-star-rating"></div>
+                        <textarea id="qv-review-text" placeholder="Escribe tu comentario..." rows="2" style="width:100%; padding:10px; border-radius:5px; border:1px solid #ddd; margin-bottom: 10px;"></textarea>
+                        <button class="btn-add" style="width: auto;" onclick="submitReview(${product.id})">Enviar Reseña</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+
+            // Lógica de Zoom
+            const zoomContainer = document.getElementById('qv-zoom-container');
+            const zoomImg = document.getElementById('qv-zoom-img');
+            
+            zoomContainer.addEventListener('mousemove', (e) => {
+                const rect = zoomContainer.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                zoomImg.style.transformOrigin = `${x}% ${y}%`;
+                zoomImg.style.transform = 'scale(2)';
+            });
+            
+            zoomContainer.addEventListener('mouseleave', () => {
+                zoomImg.style.transformOrigin = 'center center';
+                zoomImg.style.transform = 'scale(1)';
+            });
+
+            // Inicializar Reseñas
+            currentStarRating = 0;
+            updateStarDisplay();
+            renderReviewsList(id);
+        }
+
+        function updateStarDisplay() {
+            const container = document.getElementById('qv-star-rating');
+            if(container) {
+                container.innerHTML = '';
+                for(let i=1; i<=5; i++) {
+                    const star = document.createElement('i');
+                    star.className = `fas fa-star ${i <= currentStarRating ? 'active' : ''}`;
+                    star.onclick = () => { currentStarRating = i; updateStarDisplay(); };
+                    container.appendChild(star);
+                }
+            }
+        }
+
+        function renderReviewsList(productId) {
+            const list = document.getElementById('qv-review-list');
+            const reviews = productReviews[productId] || [];
+            if (reviews.length === 0) {
+                list.innerHTML = '<p style="color:#777; font-style:italic;">Sé el primero en opinar sobre este producto.</p>';
+                return;
+            }
+            list.innerHTML = reviews.map(r => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span style="color: #ffc107;">${'<i class="fas fa-star"></i>'.repeat(r.stars)}</span>
+                        <span>${r.date}</span>
+                    </div>
+                    <p>${r.text}</p>
+                </div>
+            `).join('');
+        }
+
+        function submitReview(productId) {
+            const text = document.getElementById('qv-review-text').value;
+            if (currentStarRating === 0) { showToast("Selecciona una calificación", "info"); return; }
+            if (!text.trim()) { showToast("Escribe un comentario", "info"); return; }
+
+            if (!productReviews[productId]) productReviews[productId] = [];
+            
+            productReviews[productId].push({
+                stars: currentStarRating,
+                text: text,
+                date: new Date().toLocaleDateString()
+            });
+
+            localStorage.setItem('belleza-celestial-reviews', JSON.stringify(productReviews));
+            showToast("¡Reseña enviada!");
+            renderReviewsList(productId);
+            
+            // Reset
+            document.getElementById('qv-review-text').value = '';
+            currentStarRating = 0;
+            updateStarDisplay();
+        }
+
+        function closeQuickView() {
+            document.getElementById('qv-modal').classList.remove('active');
+        }
+
+        // --- LÓGICA VISTOS RECIENTEMENTE ---
+        function addToRecent(product) {
+            // Evitar duplicados y mantener solo los últimos 6
+            recentProducts = recentProducts.filter(p => p.id !== product.id);
+            recentProducts.unshift({ id: product.id, title: product.title, price: product.price, image: product.image });
+            if (recentProducts.length > 6) recentProducts.pop();
+            
+            localStorage.setItem('belleza-celestial-recent', JSON.stringify(recentProducts));
+            renderRecentProducts();
+        }
+
+        function renderRecentProducts() {
+            const container = document.getElementById('recent-grid');
+            const section = document.getElementById('recent-section');
+            
+            if (recentProducts.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            container.innerHTML = recentProducts.map(p => `
+                <div class="recent-card">
+                    <a href="detalle.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+                        <img src="${p.image}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px; margin-bottom: 10px;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 5px;">${p.title}</h4>
+                    </a>
+                    <p style="font-weight: bold; font-size: 0.9rem; color: #555;">$${p.price}</p>
+                </div>
+            `).join('');
+        }
+
+        // --- LÓGICA CHATBOT ---
+        function toggleChat() {
+            document.getElementById('chat-window').classList.toggle('active');
+        }
+
+        function handleChatInput(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            input.value = '';
+
+            // Respuesta simulada
+            setTimeout(() => {
+                let response = "Lo siento, no entendí tu consulta. Por favor contáctanos por WhatsApp.";
+                const lowerText = text.toLowerCase();
+
+                if (lowerText.includes('pedido') || lowerText.includes('orden') || lowerText.includes('estado')) {
+                    const numberMatch = text.match(/\d+/);
+                    if (numberMatch) {
+                        const orderId = numberMatch[0];
+                        const orders = JSON.parse(localStorage.getItem('belleza_orders')) || [];
+                        const order = orders.find(o => o.id == orderId);
+                        
+                        if (order) {
+                            response = `El pedido #${orderId} del ${order.date} (${order.total}) está: <strong>En Preparación</strong>. Te avisaremos cuando sea despachado.`;
+                        } else {
+                            response = `No encontré un pedido con el ID #${orderId}. Por favor verifica el número.`;
+                        }
+                    } else {
+                        response = "Por favor, indícame el número de tu pedido para verificar su estado (ej: 'estado del pedido 170...').";
+                    }
+                } else if (lowerText.includes('hola') || lowerText.includes('buen')) response = "¡Hola! Bienvenido a Belleza Celestial. ¿Buscas algún producto en especial?";
+                else if (lowerText.includes('precio') || lowerText.includes('costo')) response = "Los precios varían según el producto. Puedes verlos en nuestro catálogo.";
+                else if (lowerText.includes('envio') || lowerText.includes('envío')) response = "Realizamos envíos a todo el país. El costo depende de tu ubicación.";
+                else if (lowerText.includes('pago') || lowerText.includes('tarjeta')) response = "Aceptamos tarjetas de crédito, débito y transferencias bancarias.";
+                else if (lowerText.includes('tienda') || lowerText.includes('ubicacion')) response = "Somos una tienda 100% online, enviamos directo a tu hogar.";
+
+                addMessage(response, 'bot');
+            }, 1000);
+        }
+
+        function addMessage(text, sender) {
+            const body = document.getElementById('chat-body');
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.innerText = text;
+            body.appendChild(div);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        // --- LÓGICA DE USUARIOS (AUTH) ---
+        let currentUser = JSON.parse(localStorage.getItem('belleza_current_user'));
+
+        function updateAuthUI() {
+            const authBtn = document.getElementById('auth-btn');
+            const userDropdown = document.getElementById('user-dropdown');
+            const userNameDisplay = document.getElementById('user-name-display');
+
+            if (currentUser) {
+                authBtn.innerHTML = '<i class="fas fa-user-check"></i>';
+                authBtn.onclick = (e) => { e.preventDefault(); userDropdown.classList.toggle('active'); };
+                userNameDisplay.textContent = `Hola, ${currentUser.name}`;
+                
+                // Mostrar link de admin si corresponde
+                const adminLink = document.getElementById('admin-link');
+                if(currentUser.isAdmin) adminLink.style.display = 'block'; else adminLink.style.display = 'none';
+                
+                checkNotifications(); // Verificar cambios en pedidos
+            } else {
+                authBtn.innerHTML = '<i class="fas fa-user"></i>';
+                authBtn.onclick = (e) => { e.preventDefault(); openAuthModal(); };
+                userDropdown.classList.remove('active');
+            }
+        }
+
+        // Sistema de Notificaciones de Pedidos
+        function checkNotifications() {
+            if (!currentUser) return;
+            
+            const orders = JSON.parse(localStorage.getItem('belleza_orders')) || [];
+            const userOrders = orders.filter(o => o.userEmail === currentUser.email);
+            // Obtenemos el estado guardado anteriormente
+            const lastState = JSON.parse(localStorage.getItem('belleza_orders_state_' + currentUser.email)) || {};
+            
+            userOrders.forEach(order => {
+                const prevStatus = lastState[order.id];
+                // Si hay un estado previo y es diferente al actual, notificamos
+                if (prevStatus && prevStatus !== order.status) {
+                    showToast(`Tu pedido #${order.id} ha cambiado a: ${order.status}`, 'info');
+                }
+                lastState[order.id] = order.status;
+            });
+            
+            localStorage.setItem('belleza_orders_state_' + currentUser.email, JSON.stringify(lastState));
+        }
+
+        function openAuthModal() { document.getElementById('auth-modal').classList.add('active'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.remove('active'); }
+        
+        function switchAuthTab(tab) {
+            document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+            document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+            document.getElementById('login-form').style.display = tab === 'login' ? 'flex' : 'none';
+            document.getElementById('register-form').style.display = tab === 'register' ? 'flex' : 'none';
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            
+            let users = JSON.parse(localStorage.getItem('belleza_users')) || [];
+            if (users.find(u => u.email === email)) {
+                showToast("El email ya está registrado", "info");
+                return;
+            }
+
+            const newUser = { name, email, pass, preferences: { darkMode: false } };
+            users.push(newUser);
+            localStorage.setItem('belleza_users', JSON.stringify(users));
+            
+            // Auto login
+            currentUser = newUser;
+            localStorage.setItem('belleza_current_user', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeAuthModal();
+            showToast(`¡Bienvenido, ${name}!`);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner"></span> Iniciando...';
+            btn.disabled = true;
+
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            
+            // Backdoor para Admin (Simulación)
+            if(email === 'admin@belleza.com' && pass === 'admin123') {
+                currentUser = { name: 'Administrador', email: email, isAdmin: true };
+                localStorage.setItem('belleza_current_user', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeAuthModal();
+                showToast("Bienvenido Admin");
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('belleza_users')) || [];
+            const user = users.find(u => u.email === email && u.pass === pass);
+            
+            setTimeout(() => {
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('belleza_current_user', JSON.stringify(currentUser));
+                    updateAuthUI();
+                    closeAuthModal();
+                    showToast(`Hola de nuevo, ${user.name}`);
+                    
+                    if(user.preferences && user.preferences.darkMode) {
+                        document.body.classList.add('dark-mode');
+                        localStorage.setItem('dark-mode', 'enabled');
+                    }
+                } else {
+                    showToast("Credenciales incorrectas", "info");
+                }
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('belleza_current_user');
+            updateAuthUI();
+            showToast("Sesión cerrada");
+        }
+
+        // --- LÓGICA DE PERFIL AVANZADO ---
+        function openProfileModal() {
+            if (!currentUser) { showToast("Debes iniciar sesión", "info"); return; }
+            
+            // Cargar datos básicos
+            document.getElementById('edit-name').value = currentUser.name;
+            document.getElementById('edit-email').value = currentUser.email;
+            document.getElementById('user-points-display').innerHTML = `<i class="fas fa-star"></i> Puntos: ${currentUser.points || 0}`;
+
+            // Resetear vista a la primera pestaña
+            switchProfileTab('data', document.querySelector('.auth-tab'));
+            
+            document.getElementById('profile-modal').classList.add('active');
+        }
+
+        function switchProfileTab(tabName, tabElement) {
+            // Actualizar clases de pestañas
+            document.querySelectorAll('#profile-modal .auth-tab').forEach(t => t.classList.remove('active'));
+            if(tabElement) tabElement.classList.add('active');
+
+            // Ocultar todas las secciones
+            document.querySelectorAll('.profile-section').forEach(s => s.style.display = 'none');
+
+            // Mostrar la seleccionada y cargar datos si es necesario
+            document.getElementById(`profile-${tabName}`).style.display = 'block';
+
+            if(tabName === 'addresses') loadAddresses();
+            if(tabName === 'orders') loadOrders();
+            if(tabName === 'recommendations') loadRecommendations();
+        }
+
+        // 1. Actualizar Datos Personales
+        function updateUserData(e) {
+            e.preventDefault();
+            const newName = document.getElementById('edit-name').value;
+            const newPass = document.getElementById('edit-pass').value;
+
+            currentUser.name = newName;
+            if(newPass) currentUser.pass = newPass;
+
+            // Actualizar en localStorage (Lista de usuarios y sesión actual)
+            let users = JSON.parse(localStorage.getItem('belleza_users')) || [];
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if(index !== -1) {
+                users[index] = { ...users[index], ...currentUser }; // Mantener otros datos
+                localStorage.setItem('belleza_users', JSON.stringify(users));
+            }
+            localStorage.setItem('belleza_current_user', JSON.stringify(currentUser));
+            
+            updateAuthUI();
+            showToast("Datos actualizados correctamente");
+        }
+
+        // 2. Gestión de Direcciones
+        function loadAddresses() {
+            const list = document.getElementById('address-list');
+            const addresses = currentUser.addresses || [];
+            
+            if(addresses.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#777;">No tienes direcciones guardadas.</p>';
+            } else {
+                list.innerHTML = addresses.map((addr, idx) => `
+                    <div class="address-card">
+                        <div class="address-actions">
+                            <i class="fas fa-trash" onclick="deleteAddress(${idx})" title="Eliminar"></i>
+                        </div>
+                        <strong>${addr.alias}</strong><br>
+                        ${addr.street}<br>
+                        ${addr.city}, CP: ${addr.zip}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function addNewAddress(e) {
+            e.preventDefault();
+            const newAddr = {
+                alias: document.getElementById('addr-alias').value,
+                street: document.getElementById('addr-street').value,
+                city: document.getElementById('addr-city').value,
+                zip: document.getElementById('addr-zip').value
+            };
+
+            if(!currentUser.addresses) currentUser.addresses = [];
+            currentUser.addresses.push(newAddr);
+            
+            // Guardar cambios
+            let users = JSON.parse(localStorage.getItem('belleza_users')) || [];
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if(index !== -1) {
+                users[index].addresses = currentUser.addresses;
+                localStorage.setItem('belleza_users', JSON.stringify(users));
+            }
+            localStorage.setItem('belleza_current_user', JSON.stringify(currentUser));
+
+            document.getElementById('add-address-form').reset();
+            document.getElementById('add-address-form').style.display = 'none';
+            loadAddresses();
+            showToast("Dirección agregada");
+        }
+
+        function deleteAddress(index) {
+            if(confirm("¿Eliminar esta dirección?")) {
+                currentUser.addresses.splice(index, 1);
+                // Guardar cambios (repetir lógica de guardado)
+                let users = JSON.parse(localStorage.getItem('belleza_users')) || [];
+                const uIdx = users.findIndex(u => u.email === currentUser.email);
+                if(uIdx !== -1) {
+                    users[uIdx].addresses = currentUser.addresses;
+                    localStorage.setItem('belleza_users', JSON.stringify(users));
+                }
+                localStorage.setItem('belleza_current_user', JSON.stringify(currentUser));
+                loadAddresses();
+            }
+        }
+
+        // 3. Historial de Pedidos
+        function loadOrders() {
+            const orderList = document.getElementById('order-list');
+            const allOrders = JSON.parse(localStorage.getItem('belleza_orders')) || [];
+            const userOrders = allOrders.filter(o => o.userEmail === currentUser.email).reverse();
+
+            orderList.innerHTML = userOrders.length ? userOrders.map(o => `
+                <div class="order-item">
+                    <div class="order-header">
+                        <span>Pedido #${o.id}</span>
+                        <span style="color: ${o.status === 'Enviado' ? '#28a745' : '#ffc107'}">${o.status || 'Pendiente'}</span>
+                    </div>
+                    <div class="order-details">
+                        <p>Fecha: ${o.date}</p>
+                        <p>Total: ${o.total}</p>
+                        <p>Items: ${o.items.map(i => i.title).join(', ')}</p>
+                    </div>
+                </div>
+            `).join('') : '<p style="text-align:center; color:#777;">No tienes pedidos aún.</p>';
+        }
+
+        // 4. Algoritmo de Recomendaciones
+        function loadRecommendations() {
+            const grid = document.getElementById('recommendation-grid');
+            const allOrders = JSON.parse(localStorage.getItem('belleza_orders')) || [];
+            const userOrders = allOrders.filter(o => o.userEmail === currentUser.email);
+
+            // 1. Analizar categorías compradas
+            const categoryCount = {};
+            userOrders.forEach(order => {
+                order.items.forEach(item => {
+                    // Buscar el producto original para obtener su categoría
+                    const originalProduct = productsData.find(p => p.title === item.title);
+                    if(originalProduct) {
+                        categoryCount[originalProduct.category] = (categoryCount[originalProduct.category] || 0) + (item.quantity || 1);
+                    }
+                });
+            });
+
+            // 2. Obtener categorías favoritas (Top 2)
+            const topCategories = Object.keys(categoryCount).sort((a,b) => categoryCount[b] - categoryCount[a]).slice(0, 2);
+            
+            // 3. Filtrar productos recomendados
+            let recommendations = [];
+            if(topCategories.length > 0) {
+                recommendations = productsData.filter(p => topCategories.includes(p.category));
+            } else {
+                // Si no hay historial, mostrar productos con tag 'Nuevo' o 'Oferta'
+                recommendations = productsData.filter(p => p.tags && (p.tags.includes('Nuevo') || p.tags.includes('Oferta')));
+            }
+
+            // 4. Seleccionar 4 al azar
+            const finalRecs = recommendations.sort(() => 0.5 - Math.random()).slice(0, 4);
+
+            grid.innerHTML = finalRecs.map(p => `
+                <div class="mini-product-card">
+                    <a href="detalle.html?id=${p.id}" style="text-decoration:none; color:inherit;">
+                        <img src="${p.image}" alt="${p.title}">
+                        <h4>${p.title}</h4>
+                    </a>
+                    <div class="price">$${p.price}</div>
+                    <button class="btn-add" onclick="addToCart('${p.title}', '${p.price}', '${p.image}', this)">Agregar</button>
+                </div>
+            `).join('');
+        }
+
+        function closeProfileModal() { document.getElementById('profile-modal').classList.remove('active'); }
+
+        // Event Listeners
+        cartBtn.addEventListener('click', (e) => { e.preventDefault(); openCart(); });
+        closeCartBtn.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', closeCart);
+        // Cerrar también wishlist si se hace clic fuera
+        cartOverlay.addEventListener('click', () => {
+            wishlistSidebar.classList.remove('active');
+        });
+
+        // Close modal on outside click
+        document.getElementById('qv-modal').addEventListener('click', (e) => { if(e.target === document.getElementById('qv-modal')) closeQuickView(); });
+        document.getElementById('profile-modal').addEventListener('click', (e) => { if(e.target === document.getElementById('profile-modal')) closeProfileModal(); });
+
+        clearCartBtn.addEventListener('click', () => { cart = []; updateCart(); });
+
+        // Inicializar carrito al cargar
+        updateCart();
+        renderCatalog(currentPage); // Inicializar catálogo
+        renderRecentProducts(); // Inicializar recientes
+        updateAuthUI(); // Inicializar UI de usuario
+    </script>
+
+    <!-- Botón Flotante WhatsApp -->
+    <a href="https://wa.me/5493704831264" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+</body>
+</html>

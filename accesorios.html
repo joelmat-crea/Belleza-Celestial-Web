@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accesorios - Belleza Celestial</title>
+    <link rel="icon" href="logo2.png" type="image/png">
+    <style>
+        :root { --primary-color: #0056b3; --secondary-color: #ffffff; --accent-color: #e3f2fd; --text-color: #333; --card-bg: #fff; }
+        body.dark-mode {
+            --primary-color: #0d47a1;
+            --secondary-color: #64b5f6;
+            --accent-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--accent-color); color: var(--text-color); margin: 0; overflow-x: hidden; }
+        header { background: var(--primary-color); padding: 10px 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1100; justify-content: flex-start; }
+        .logo img { height: 50px; }
+        .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .section-title { text-align: center; color: var(--primary-color); margin-bottom: 2rem; font-size: 2rem; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .product-card { background: var(--card-bg); padding: 1.5rem; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; position: relative; transition: transform 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.25); }
+        .product-card img { width: 100%; border-radius: 5px; }
+        .product-title { color: var(--primary-color); margin: 1rem 0 0.5rem; }
+        .price { font-size: 1.2rem; font-weight: bold; color: #555; margin-bottom: 1rem; }
+        .btn-add { background: var(--primary-color); color: #fff; border: none; padding: 8px 16px; width: 100%; border-radius: 5px; cursor: pointer; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: var(--primary-color); text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+        
+        /* Buscador */
+        .search-container { flex: 1; max-width: 400px; margin: 0 20px; position: relative; margin-left: auto; order: 3; }
+        .search-input { width: 100%; padding: 10px 15px 10px 40px; border-radius: 20px; border: none; outline: none; font-size: 1rem; color: var(--text-color); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+        
+        /* Menú y Botones */
+        .menu-toggle { display: none; font-size: 1.5rem; color: #fff; background: none; border: none; cursor: pointer; order: 1; }
+        .cart-icon-header { color: #fff; font-size: 1.2rem; text-decoration: none; margin-left: 15px; display: flex; align-items: center; order: 4; }
+        .dark-mode-btn { background: none; border: none; color: inherit; cursor: pointer; font-size: 1rem; }
+        
+        nav { order: 4; margin-left: 15px; }
+        nav ul { list-style: none; display: flex; gap: 15px; }
+        nav a { color: #fff; text-decoration: none; }
+
+        /* Etiquetas */
+        .product-tag { position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 15px; color: white; font-size: 0.75rem; font-weight: bold; z-index: 2; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .tag-nuevo { background-color: #00C853; }
+        .tag-oferta { background-color: #ff4444; }
+
+        /* Carrito Sidebar */
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1150; display: none; }
+        .cart-overlay.active { display: block; }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 350px; height: 100%; background: #fff; z-index: 1200; transition: right 0.3s; padding: 20px; display: flex; flex-direction: column; }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .cart-items { flex: 1; overflow-y: auto; }
+        .close-cart { cursor: pointer; font-size: 1.5rem; }
+        
+        @media (max-width: 768px) {
+            .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+            .product-card { padding: 8px; }
+            .container { padding: 0 10px 4rem; }
+            .cart-sidebar { width: 100%; right: -100%; }
+            
+            .menu-toggle { display: block; }
+            .search-container { margin: 0 10px; width: auto; flex: 0; }
+            .search-input { display: none; position: fixed; top: 75px; left: 5%; width: 90%; z-index: 100; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+            .search-container.active .search-input { display: block; }
+            .search-icon { position: static; transform: none; font-size: 1.2rem; color: #fff; cursor: pointer; padding: 10px; }
+            
+            nav { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--primary-color); flex-direction: column; max-height: calc(100vh - 60px); overflow-y: auto; margin-left: 0; }
+            nav.active { display: block; }
+            nav ul { flex-direction: column; padding: 1rem; gap: 15px; align-items: center; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <button class="menu-toggle" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <div class="logo"><a href="index.html"><img src="logo1.png" alt="Logo"></a></div>
+        
+        <div class="search-container" id="search-container">
+            <i class="fas fa-search search-icon" id="search-icon-btn"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Buscar en esta categoría...">
+        </div>
+
+        <a href="#" id="cart-btn" class="cart-icon-header">
+            <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+        </a>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><button class="dark-mode-btn" id="dark-mode-toggle"><i class="fas fa-moon"></i></button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <br>
+        <a href="index.html" class="back-btn">← Volver al Inicio</a>
+        <h2 class="section-title">Accesorios para Cabello</h2>
+        <div class="product-grid" id="grid"></div>
+    </div>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart" id="close-cart"><i class="fas fa-times"></i></span></div>
+        <div class="cart-items" id="cart-items"></div>
+    </aside>
+
+    <script>
+        const products = [
+            { id: 24, category: 'Moños', title: "Moño de Satén Grande", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Mono+Saten", tags: ['Nuevo'] },
+            { id: 25, category: 'Moños', title: "Set de Moños Velvet", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Set+Monos", tags: [] },
+            { id: 26, category: 'Moños', title: "Moño con Lazos Largos", price: "6.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Mono+Lazos", tags: [] },
+            { id: 27, category: 'Moños', title: "Moño Estampado Floral", price: "4.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Mono+Floral", tags: ['Oferta'] },
+            { id: 28, category: 'Vinchas', title: "Vincha de Perlas", price: "12.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vincha+Perlas", tags: ['Nuevo'] },
+            { id: 29, category: 'Vinchas', title: "Vincha Nudo Terciopelo", price: "9.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vincha+Nudo", tags: [] },
+            { id: 30, category: 'Vinchas', title: "Vincha Deportiva Elástica", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vincha+Sport", tags: [] },
+            { id: 31, category: 'Vinchas', title: "Vincha Rígida Satinada", price: "7.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Vincha+Saten", tags: [] },
+            { id: 32, category: 'Peines', title: "Peine Desenredante Ancho", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Peine+Ancho", tags: [] },
+            { id: 33, category: 'Peines', title: "Peine de Bambú Natural", price: "10.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Peine+Bambu", tags: ['Nuevo'] },
+            { id: 34, category: 'Peines', title: "Peine Cola de Ratón", price: "3.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Peine+Cola", tags: [] },
+            { id: 35, category: 'Peines', title: "Set de Peines Estilista", price: "15.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Set+Peines", tags: ['Oferta'] },
+            { id: 36, category: 'Hebillas', title: "Hebillas Click-Clack Colores", price: "2.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hebillas+Click", tags: [] },
+            { id: 37, category: 'Hebillas', title: "Hebilla Francesa Carey", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hebilla+Carey", tags: [] },
+            { id: 38, category: 'Hebillas', title: "Hebillas con Strass", price: "6.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hebillas+Strass", tags: ['Nuevo'] },
+            { id: 39, category: 'Hebillas', title: "Hebilla Geométrica Metal", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hebilla+Metal", tags: [] },
+            { id: 40, category: 'Accesorios Trenzas', title: "Anillos para Trenzas Dorados", price: "3.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Anillos+Trenza", tags: [] },
+            { id: 41, category: 'Accesorios Trenzas', title: "Hilo Encerado para Trenzas", price: "2.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Hilo+Trenza", tags: [] },
+            { id: 42, category: 'Accesorios Trenzas', title: "Cuentas de Madera Mix", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Cuentas+Madera", tags: [] },
+            { id: 43, category: 'Accesorios Trenzas', title: "Clips para Trenzas Plata", price: "3.50", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Clips+Plata", tags: ['Nuevo'] },
+            { id: 44, category: 'Gomitas', title: "Scrunchies de Seda", price: "8.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Scrunchies", tags: ['Nuevo'] },
+            { id: 45, category: 'Gomitas', title: "Gomitas Invisibles Espiral", price: "5.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Gomitas+Espiral", tags: [] },
+            { id: 46, category: 'Gomitas', title: "Gomitas Elásticas Negras", price: "2.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Gomitas+Negras", tags: [] },
+            { id: 47, category: 'Gomitas', title: "Gomitas de Felpa Suave", price: "4.00", image: "https://via.placeholder.com/200/e3f2fd/0056b3?text=Gomitas+Felpa", tags: ['Oferta'] }
+        ];
+
+        const grid = document.getElementById('grid');
+        function renderProducts(data) {
+            if(data.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No se encontraron productos.</p>';
+                return;
+            }
+            grid.innerHTML = data.map(p => {
+            const tagsHtml = (p.tags && p.tags.length > 0) ? p.tags.map(tag => `<span class="product-tag tag-${tag.toLowerCase()}"></span>`).join('') : '';
+            return `
+            <article class="product-card">
+                
+                <a href="detalle.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+                    <img src="${p.image}" alt="${p.title}" loading="lazy">
+                    <h3 class="product-title">${p.title}</h3>
+                </a>
+                <p class="price">$${p.price}</p>
+                <button class="btn-add" onclick="addToCart('${p.title}', '${p.price}', '${p.image}', this)">Añadir al Carrito</button>
+            </article>
+            `}).join('');
+        }
+        renderProducts(products);
+
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartCountElement = document.getElementById('cart-count');
+        
+        let cart = [];
+        try {
+            cart = JSON.parse(localStorage.getItem('belleza-celestial-cart')) || [];
+        } catch (e) {
+            console.error("Error leyendo carrito", e);
+            cart = [];
+        }
+        cartCountElement.textContent = cart.length;
+
+        function openCart() { cartOverlay.classList.add('active'); cartSidebar.classList.add('active'); renderCart(); }
+        function closeCart() { cartOverlay.classList.remove('active'); cartSidebar.classList.remove('active'); }
+        function addToCart(title, price, image, btn) {
+            const existing = cart.find(i => i.title === title);
+            if(existing) existing.quantity = (existing.quantity || 1) + 1; else cart.push({ title, price, image, quantity: 1 });
+            localStorage.setItem('belleza-celestial-cart', JSON.stringify(cart));
+            cartCountElement.textContent = cart.length;
+            btn.innerText = "¡Añadido!"; btn.style.backgroundColor = "#25D366";
+            setTimeout(() => { btn.innerText = "Añadir al Carrito"; btn.style.backgroundColor = ""; }, 2000);
+        }
+        function renderCart() {
+            cartItemsContainer.innerHTML = cart.length ? cart.map(item => `<div style="display:flex; margin-bottom:10px; align-items:center;"><img src="${item.image}" style="width:50px; height:50px; border-radius:5px; margin-right:10px;"><div><b>${item.title}</b><br>$${item.price} x ${item.quantity || 1}</div></div>`).join('') : '<p>Carrito vacío</p>';
+        }
+        cartBtn.addEventListener('click', (e) => { e.preventDefault(); openCart(); });
+        closeCartBtn.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', closeCart);
+
+        // Menú Móvil y Scroll
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mainNav = document.getElementById('main-nav');
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => { mainNav.classList.toggle('active'); });
+            window.addEventListener('scroll', () => { if (mainNav.classList.contains('active')) mainNav.classList.remove('active'); });
+        }
+
+        // Modo Oscuro
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        if (localStorage.getItem('dark-mode') === 'enabled') body.classList.add('dark-mode');
+        if(darkModeToggle) {
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('dark-mode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+            });
+        }
+
+        // Búsqueda
+        const searchInput = document.getElementById('search-input');
+        const searchIconBtn = document.getElementById('search-icon-btn');
+        const searchContainer = document.getElementById('search-container');
+        if(searchIconBtn) {
+            searchIconBtn.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    searchContainer.classList.toggle('active');
+                    if (searchContainer.classList.contains('active')) searchInput.focus();
+                }
+            });
+            
+            window.addEventListener('scroll', () => { if (searchContainer.classList.contains('active')) { searchContainer.classList.remove('active'); searchInput.blur(); } });
+            searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { searchContainer.classList.remove('active'); searchInput.blur(); } });
+        }
+        if(searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = products.filter(p => p.title.toLowerCase().includes(term));
+                renderProducts(filtered);
+            });
+        }
+    </script>
+</body>
+</html>

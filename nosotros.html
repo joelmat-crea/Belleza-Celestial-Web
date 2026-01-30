@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - Belleza Celestial</title>
+    <link rel="icon" href="logo2.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #ffffff;
+            --accent-color: #e3f2fd;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+        }
+
+        body.dark-mode {
+            --primary-color: #0d47a1;
+            --secondary-color: #1e1e1e;
+            --secondary-color: #64b5f6; /* Ajuste para texto visible en header */
+            --accent-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--accent-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Encabezado */
+        header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo { display: flex; align-items: center; }
+        .logo img { height: 60px; width: auto; transition: transform 0.3s ease; }
+        .logo img:hover { transform: scale(1.1); }
+
+        nav ul { list-style: none; display: flex; gap: 20px; }
+        nav a { color: var(--secondary-color); text-decoration: none; font-weight: 500; transition: opacity 0.3s; }
+        nav a:hover { opacity: 0.8; }
+
+        /* Contenido Nosotros */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem 4rem; flex: 1; }
+        
+        .about-section {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .about-section h1 { color: var(--primary-color); font-size: 2.5rem; margin-bottom: 1.5rem; }
+        .about-section p { font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; color: #555; }
+        .about-image { width: 100%; max-height: 400px; object-fit: cover; border-radius: 10px; margin-top: 2rem; }
+
+        /* Footer */
+        footer { background-color: var(--primary-color); color: var(--secondary-color); text-align: center; padding: 2rem; margin-top: auto; }
+        .footer-content { display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem; max-width: 1200px; margin: 0 auto 2rem; }
+        .footer-section h3 { margin-bottom: 1rem; font-size: 1.3rem; }
+        .social-links { display: flex; justify-content: center; gap: 1.5rem; font-size: 1.8rem; margin-top: 1rem; }
+        .social-links a { color: var(--secondary-color); transition: transform 0.3s; }
+        .social-links a:hover { transform: translateY(-3px); }
+
+        .btn-whatsapp {
+            display: inline-block; background-color: #25D366; color: white; padding: 10px 25px;
+            border-radius: 25px; text-decoration: none; font-weight: bold; margin-top: 1rem;
+            transition: background-color 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .btn-whatsapp:hover { background-color: #128C7E; }
+
+        /* Botón Flotante */
+        .whatsapp-float {
+            position: fixed; bottom: 20px; right: 20px; background-color: #25D366; color: white;
+            width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 900; transition: transform 0.3s ease; text-decoration: none;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); background-color: #128C7E; }
+
+        /* Carrito (Estilos mínimos necesarios) */
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
+        .cart-overlay.active { display: block; opacity: 1; }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 350px; height: 100%; background: var(--card-bg); z-index: 1200; transition: right 0.3s; padding: 20px; display: flex; flex-direction: column; }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .close-cart { cursor: pointer; font-size: 1.5rem; }
+        .cart-items { flex: 1; overflow-y: auto; }
+        .cart-footer { border-top: 1px solid #eee; padding-top: 15px; margin-top: auto; }
+        .btn-add { background-color: var(--primary-color); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; }
+        .btn-clear { background: transparent; color: #ff4444; border: 1px solid #ff4444; padding: 10px; border-radius: 5px; width: 100%; margin-top: 10px; cursor: pointer; }
+        
+        /* Menú Hamburguesa */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Estilos del Buscador */
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        /* Optimización Móvil */
+        @media (max-width: 768px) {
+            header {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 10px 20px;
+                position: relative;
+                position: sticky;
+                top: 0;
+                z-index: 1100;
+            }
+            
+            .logo { 
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 10;
+            }
+            
+            .menu-toggle { 
+                display: block; 
+                order: 1;
+            }
+
+            .cart-icon-header {
+                order: 4;
+            }
+
+            .search-container {
+                order: 3;
+                margin: 0 10px;
+                width: auto;
+                flex: 0;
+                margin-left: auto;
+            }
+
+            .search-input {
+                display: none;
+                position: fixed;
+                top: 75px;
+                left: 5%;
+                width: 90%;
+                z-index: 100;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+
+            .search-container.active .search-input {
+                display: block;
+            }
+
+            .search-icon {
+                position: static;
+                transform: none;
+                font-size: 1.2rem;
+                color: var(--secondary-color);
+                cursor: pointer;
+                padding: 10px;
+            }
+            
+            nav {
+                order: 4;
+                width: 100%;
+                display: none; /* Oculto por defecto */
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: var(--primary-color);
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                max-height: calc(100vh - 60px);
+                overflow-y: auto;
+            }
+            
+            nav.active { display: block; }
+
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.1);
+                padding: 1rem;
+                border-radius: 5px;
+            }
+            .about-section {
+                padding: 1.5rem;
+            }
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        .dark-mode-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Estilos Chatbot */
+        .chat-toggle {
+            position: fixed; bottom: 20px; left: 20px;
+            background-color: var(--primary-color); color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer; z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .chat-toggle:hover { transform: scale(1.1); }
+        
+        .chat-window {
+            position: fixed; bottom: 90px; left: 20px;
+            width: 300px; height: 400px;
+            background: white; border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1000; display: none; flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-window.active { display: flex; }
+        
+        .chat-header { background: var(--primary-color); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .chat-input-area { padding: 10px; border-top: 1px solid #eee; display: flex; gap: 5px; }
+        .chat-input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        .chat-send { background: var(--primary-color); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
+        
+        .message { max-width: 80%; padding: 8px 12px; border-radius: 15px; font-size: 0.9rem; }
+        .message.bot { background: #e3f2fd; align-self: flex-start; border-bottom-left-radius: 2px; color: #333; }
+        .message.user { background: var(--primary-color); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+        /* Controles Cantidad Carrito */
+        .qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qty-btn { 
+            background: #eee; border: none; width: 25px; height: 25px; 
+            border-radius: 50%; cursor: pointer; font-weight: bold; color: #555;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .qty-btn:hover { background: #ddd; }
+
+        /* Estilos FAQ (Acordeón) */
+        .faq-section { margin-top: 3rem; }
+        .faq-title { text-align: center; color: var(--primary-color); margin-bottom: 2rem; font-size: 2rem; }
+        .accordion { max-width: 800px; margin: 0 auto; }
+        .accordion-item { border-bottom: 1px solid #ddd; margin-bottom: 10px; border-radius: 5px; overflow: hidden; background: var(--card-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .accordion-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--primary-color); transition: background 0.3s; }
+        .accordion-header:hover { background: var(--accent-color); }
+        .accordion-header i { transition: transform 0.3s; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s; background: #fff; color: #555; line-height: 1.6; }
+        
+        .accordion-item.active .accordion-content { max-height: 300px; padding: 15px 20px; border-top: 1px solid #eee; }
+        .accordion-item.active .accordion-header { background: var(--accent-color); }
+        .accordion-item.active .accordion-header i { transform: rotate(180deg); }
+
+        /* Estilos Carrito Header */
+        .cart-icon-header {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            text-decoration: none;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Estilos Menú Acordeón Móvil */
+        nav details summary { cursor: pointer; list-style: none; padding: 5px 0; font-weight: bold; color: var(--secondary-color); }
+        nav details summary::-webkit-details-marker { display: none; }
+        nav details ul { padding-left: 15px; margin-top: 5px; display: flex; flex-direction: column; gap: 5px; }
+        nav details ul li a { font-weight: normal; font-size: 0.95rem; opacity: 0.9; color: var(--secondary-color); }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="logo1.png" alt="Belleza Celestial"></a>
+        </div>
+        <button class="menu-toggle" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <div class="search-container" id="search-container">
+            <i class="fas fa-search search-icon" id="search-icon-btn"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Buscar...">
+        </div>
+        <a href="#" id="cart-btn" class="cart-icon-header">
+            <i class="fas fa-shopping-cart"></i> 
+            <span id="cart-count" style="background: white; color: var(--primary-color); padding: 2px 6px; border-radius: 50%; font-size: 0.8rem; margin-left: 5px;">0</span>
+        </a>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#catalogo">Productos</a></li>
+                <li><a href="nosotros.html" style="opacity: 1; font-weight: bold;">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+                <li><button class="dark-mode-btn" id="dark-mode-toggle"><i class="fas fa-moon"></i></button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="about-section">
+            <h1>Nuestra Esencia</h1>
+            <p>
+                En <strong>Belleza Celestial</strong>, creemos que la verdadera belleza es un reflejo del alma y la naturaleza. 
+                Nacimos con la misión de crear productos cosméticos que no solo cuiden tu piel, sino que te conecten con la pureza y la calma del cielo.
+            </p>
+            <p>
+                Cada uno de nuestros productos está formulado con ingredientes naturales seleccionados, libres de crueldad animal y respetuosos con el medio ambiente. 
+                Queremos que tu rutina de belleza sea un momento sagrado de autocuidado y bienestar.
+            </p>
+            <img src="https://via.placeholder.com/1000x400/0056b3/ffffff?text=Nuestro+Equipo+y+Valores" alt="Sobre Nosotros" class="about-image" loading="lazy">
+        </section>
+
+        <!-- Sección de Preguntas Frecuentes (FAQ) -->
+        <section class="faq-section">
+            <h2 class="faq-title">Preguntas Frecuentes</h2>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">¿Son los productos libres de crueldad animal? <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">
+                        <p>Sí, en Belleza Celestial amamos a los animales. Todos nuestros productos son 100% Cruelty-Free y no realizamos pruebas en animales en ninguna etapa de producción.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">¿Cuáles son los tiempos de envío? <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">
+                        <p>Los envíos nacionales suelen tardar entre 3 a 5 días hábiles. Para zonas remotas, podría extenderse hasta 7 días hábiles. Recibirás un código de seguimiento al realizar tu compra.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">¿Tienen política de devolución? <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">
+                        <p>Aceptamos devoluciones dentro de los 15 días posteriores a la recepción del producto, siempre y cuando este se encuentre cerrado y en su empaque original.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">¿Cómo puedo acumular puntos de fidelidad? <i class="fas fa-chevron-down"></i></div>
+                    <div class="accordion-content">
+                        <p>¡Es muy fácil! Solo debes registrarte en nuestra tienda. Por cada $1 que gastes en tus compras, acumularás 1 punto que podrás ver en tu perfil.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Atención al Cliente</h3>
+                <p>¿Tienes dudas sobre nuestra historia o productos?</p>
+                <a href="https://wa.me/message/SECRN4W7JB2AK1" class="btn-whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Hablar con un Asesor
+                </a>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/share/1DBrKNRitr/?mibextid=wwXIfr" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/bellezacelestia_?igsh=MWxkOWNhb3kwaWY3Ng%" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/message/SECRN4W7JB2AK1" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <p style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem;">&copy; 2024 Belleza Celestial. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Estructura del Carrito (Mantenida para consistencia visual) -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2 style="color: var(--primary-color);">Tu Carrito</h2>
+            <span class="close-cart" id="close-cart"><i class="fas fa-times"></i></span>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p style="text-align: center; color: #777; margin-top: 20px;">Tu carrito está vacío.</p>
+        </div>
+        <div class="cart-footer">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; color: var(--primary-color);">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button class="btn-add" onclick="checkout()">Finalizar Compra</button>
+            <button class="btn-clear" id="clear-cart">Vaciar Carrito</button>
+        </div>
+    </aside>
+
+    <!-- Chatbot Widget -->
+    <div class="chat-toggle" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </div>
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <span>Asistente Celestial</span>
+            <i class="fas fa-times" style="cursor: pointer;" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="message bot">¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Escribe tu consulta..." onkeypress="handleChatInput(event)">
+            <button class="chat-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Botón Flotante WhatsApp -->
+    <a href="https://wa.me/5493704831264" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        // Lógica básica del carrito para evitar errores en esta página
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalElement = document.getElementById('cart-total');
+        const cartCountElement = document.getElementById('cart-count');
+        const clearCartBtn = document.getElementById('clear-cart');
+
+        let cart = JSON.parse(localStorage.getItem('belleza-celestial-cart')) || [];
+
+        function openCart() {
+            cartOverlay.classList.add('active');
+            cartSidebar.classList.add('active');
+        }
+
+        function closeCart() {
+            cartOverlay.classList.remove('active');
+            cartSidebar.classList.remove('active');
+        }
+
+        function updateCart() {
+            localStorage.setItem('belleza-celestial-cart', JSON.stringify(cart));
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #777; margin-top: 20px;">Tu carrito está vacío.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    total += parseFloat(item.price) * (item.quantity || 1);
+                    
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    cartItem.innerHTML = `
+                        <img src="${item.image}" alt="${item.title}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-price">$${item.price}</div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity || 1}</span>
+                                <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <i class="fas fa-trash remove-item" onclick="removeFromCart(${index})" title="Eliminar"></i>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                });
+            }
+
+            cartTotalElement.textContent = '$' + total.toFixed(2);
+            cartCountElement.textContent = cart.length;
+        }
+
+        // Cambiar Cantidad
+        window.changeQuantity = (index, delta) => {
+            if (!cart[index].quantity) cart[index].quantity = 1;
+            cart[index].quantity += delta;
+            
+            if (cart[index].quantity <= 0) {
+                if(confirm("¿Eliminar producto del carrito?")) {
+                    cart.splice(index, 1);
+                } else {
+                    cart[index].quantity = 1;
+                }
+            }
+            updateCart();
+        };
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Tu carrito está vacío.");
+                return;
+            }
+
+            let message = "Hola Belleza Celestial, quisiera realizar el siguiente pedido:\n\n";
+            let total = 0;
+
+            cart.forEach(item => {
+                message += `- ${item.title} (x${item.quantity || 1}): $${(parseFloat(item.price) * (item.quantity || 1)).toFixed(2)}\n`;
+                total += parseFloat(item.price) * (item.quantity || 1);
+            });
+
+            message += `\nTotal: $${total.toFixed(2)}`;
+            
+            const phoneNumber = "5493704831264"; 
+            
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // Eliminar Item (necesario para que funcione el botón de basura en esta página)
+        window.removeFromCart = (index) => {
+            cart.splice(index, 1);
+            updateCart();
+        };
+
+        // Menú Hamburguesa
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mainNav = document.getElementById('main-nav');
+        if(mobileMenuBtn && mainNav) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+            });
+
+            // Cerrar menú al hacer scroll
+            window.addEventListener('scroll', () => {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                }
+            });
+        }
+
+        // Búsqueda Móvil
+        const searchIconBtn = document.getElementById('search-icon-btn');
+        const searchContainer = document.getElementById('search-container');
+        if(searchIconBtn) {
+            searchIconBtn.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    searchContainer.classList.toggle('active');
+                    if (searchContainer.classList.contains('active')) document.getElementById('search-input').focus();
+                }
+            });
+        }
+
+        // Modo Oscuro
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            body.classList.add('dark-mode');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+        });
+
+        // --- LÓGICA CHATBOT ---
+        function toggleChat() {
+            document.getElementById('chat-window').classList.toggle('active');
+        }
+
+        function handleChatInput(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            input.value = '';
+
+            // Respuesta simulada
+            setTimeout(() => {
+                let response = "Lo siento, no entendí tu consulta. Por favor contáctanos por WhatsApp.";
+                const lowerText = text.toLowerCase();
+
+                if (lowerText.includes('text.match(/\d+/);
+                    if (numberMatch) {
+                        const orderId = numberMatch[0];
+                        const orders = JSON.parse(localStorage.getItem('belleza_orders')) || [];
+                        const order = orders.find(o => o.id == orderId);
+                        
+                        if (order) {
+                            response = `El pedido #${orderId} del ${order.date} (${order.total}) está: <strong>En Preparación</strong>.`;
+                        } else {
+                            response = `No encontré el pedido #${orderId}. Por favor verifica el número.`;
+                        }
+                    } else {
+                        response = "Por favor indícame el número de tu pedido para verificar el estado.";
+                    }
+                } else if (lowerText.includes('hola') || lowerText.includes('buen')) response = "¡Hola! Bienvenido a Belleza Celestial. ¿Buscas algún producto en especial?";
+                else if (lowerText.includes('precio') || lowerText.includes('costo')) response = "Los precios varían según el producto. Puedes verlos en nuestro catálogo.";
+                else if (lowerText.includes('envio') || lowerText.includes('envío')) response = "Realizamos envíos a todo el país. El costo depende de tu ubicación.";
+                else if (lowerText.includes('pago') || lowerText.includes('tarjeta')) response = "Aceptamos tarjetas de crédito, débito y transferencias bancarias.";
+                else if (lowerText.includes('tienda') || lowerText.includes('ubicacion')) response = "Somos una tienda 100% online, enviamos directo a tu hogar.";
+
+                addMessage(response, 'bot');
+            }, 1000);
+        }
+
+        function addMessage(text, sender) {
+            const body = document.getElementById('chat-body');
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.innerText = text;
+            body.appendChild(div);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        cartBtn.addEventListener('click', (e) => { e.preventDefault(); openCart(); });
+        closeCartBtn.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', closeCart);
+        clearCartBtn.addEventListener('click', () => { cart = []; updateCart(); });
+
+        // Inicializar carrito al cargar
+        updateCart();
+    </script>
+</body>
+</html>

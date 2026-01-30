@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto - Belleza Celestial</title>
+    <link rel="icon" href="logo2.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #ffffff;
+            --accent-color: #e3f2fd;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+        }
+
+        body.dark-mode {
+            --primary-color: #0d47a1;
+            --secondary-color: #1e1e1e;
+            --secondary-color: #64b5f6;
+            --accent-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--accent-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Encabezado */
+        header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo { display: flex; align-items: center; }
+        .logo img { height: 60px; width: auto; transition: transform 0.3s ease; }
+        .logo img:hover { transform: scale(1.1); }
+
+        nav ul { list-style: none; display: flex; gap: 20px; }
+        nav a { color: var(--secondary-color); text-decoration: none; font-weight: 500; transition: opacity 0.3s; }
+        nav a:hover { opacity: 0.8; }
+
+        /* Contenido Detalle */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem 4rem; flex: 1; }
+        
+        .product-detail-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+
+        .detail-image {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .detail-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .detail-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .detail-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .detail-price {
+            font-size: 2rem;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .btn-add-large {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-block;
+        }
+
+        .btn-add-large:hover {
+            background-color: #003d80;
+            transform: scale(1.05);
+        }
+
+        .btn-wishlist-detail {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 13px 20px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+        .btn-wishlist-detail:hover, .btn-wishlist-detail.active {
+            background-color: #ff4444;
+            border-color: #ff4444;
+            color: white;
+        }
+
+        /* Footer */
+        footer { background-color: var(--primary-color); color: var(--secondary-color); text-align: center; padding: 2rem; margin-top: auto; }
+        .footer-content { display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem; max-width: 1200px; margin: 0 auto 2rem; }
+        .footer-section h3 { margin-bottom: 1rem; font-size: 1.3rem; }
+        .social-links { display: flex; justify-content: center; gap: 1.5rem; font-size: 1.8rem; margin-top: 1rem; }
+        .social-links a { color: var(--secondary-color); transition: transform 0.3s; }
+        .social-links a:hover { transform: translateY(-3px); }
+
+        /* Carrito */
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
+        .cart-overlay.active { display: block; opacity: 1; }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 350px; height: 100%; background: var(--card-bg); z-index: 1200; transition: right 0.3s; padding: 20px; display: flex; flex-direction: column; }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .close-cart { cursor: pointer; font-size: 1.5rem; }
+        .cart-items { flex: 1; overflow-y: auto; }
+        .cart-footer { border-top: 1px solid #eee; padding-top: 15px; margin-top: auto; }
+        .btn-add { background-color: var(--primary-color); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; }
+        .btn-clear { background: transparent; color: #ff4444; border: 1px solid #ff4444; padding: 10px; border-radius: 5px; width: 100%; margin-top: 10px; cursor: pointer; }
+        
+        /* Botón Flotante */
+        .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background-color: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 900; transition: transform 0.3s ease; text-decoration: none; }
+        .whatsapp-float:hover { transform: scale(1.1); background-color: #128C7E; }
+        
+        /* Menú Hamburguesa */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Estilos del Buscador */
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        /* Optimización Móvil */
+        @media (max-width: 768px) {
+            header {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 10px 20px;
+                position: relative;
+                position: sticky;
+                top: 0;
+                z-index: 1100;
+            }
+            
+            .logo { 
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 10;
+            }
+            
+            .menu-toggle { 
+                display: block; 
+                order: 1;
+            }
+
+            .cart-icon-header {
+                order: 4;
+            }
+
+            .search-container {
+                order: 3;
+                margin: 0 10px;
+                width: auto;
+                flex: 0;
+                margin-left: auto;
+            }
+
+            .search-input {
+                display: none;
+                position: fixed;
+                top: 75px;
+                left: 5%;
+                width: 90%;
+                z-index: 100;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+
+            .search-container.active .search-input {
+                display: block;
+            }
+
+            .search-icon {
+                position: static;
+                transform: none;
+                font-size: 1.2rem;
+                color: var(--secondary-color);
+                cursor: pointer;
+                padding: 10px;
+            }
+            
+            nav {
+                order: 4;
+                width: 100%;
+                display: none; /* Oculto por defecto */
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: var(--primary-color);
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                max-height: calc(100vh - 60px);
+                overflow-y: auto;
+            }
+            
+            nav.active { display: block; }
+
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.1);
+                padding: 1rem;
+                border-radius: 5px;
+            }
+            .product-detail-container {
+                flex-direction: column;
+            }
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        .dark-mode-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background-color: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: toastIn 0.3s forwards, toastOut 0.3s forwards 2.7s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.success { background-color: #25D366; }
+        .toast.info { background-color: var(--primary-color); }
+
+        @keyframes toastIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes toastOut {
+            to { opacity: 0; transform: translateY(20px); }
+        }
+
+        /* Estilos Chatbot */
+        .chat-toggle {
+            position: fixed; bottom: 20px; left: 20px;
+            background-color: var(--primary-color); color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer; z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .chat-toggle:hover { transform: scale(1.1); }
+        
+        .chat-window {
+            position: fixed; bottom: 90px; left: 20px;
+            width: 300px; height: 400px;
+            background: white; border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1000; display: none; flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-window.active { display: flex; }
+        
+        .chat-header { background: var(--primary-color); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .chat-input-area { padding: 10px; border-top: 1px solid #eee; display: flex; gap: 5px; }
+        .chat-input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        .chat-send { background: var(--primary-color); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
+        
+        .message { max-width: 80%; padding: 8px 12px; border-radius: 15px; font-size: 0.9rem; }
+        .message.bot { background: #e3f2fd; align-self: flex-start; border-bottom-left-radius: 2px; color: #333; }
+        .message.user { background: var(--primary-color); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+        /* Controles Cantidad Carrito */
+        .qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qty-btn { 
+            background: #eee; border: none; width: 25px; height: 25px; 
+            border-radius: 50%; cursor: pointer; font-weight: bold; color: #555;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .qty-btn:hover { background: #ddd; }
+
+        /* Sección Vistos Recientemente */
+        .recent-section {
+            padding: 2rem 0;
+            background: #f8f9fa;
+            margin-top: 2rem;
+        }
+        .recent-grid {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        .recent-grid::-webkit-scrollbar { height: 6px; }
+        .recent-grid::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+        .recent-card { min-width: 200px; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; }
+
+        /* Estilos Carrito Header */
+        .cart-icon-header {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            text-decoration: none;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Estilos Menú Acordeón Móvil */
+        nav details summary { cursor: pointer; list-style: none; padding: 5px 0; font-weight: bold; color: var(--secondary-color); }
+        nav details summary::-webkit-details-marker { display: none; }
+        nav details ul { padding-left: 15px; margin-top: 5px; display: flex; flex-direction: column; gap: 5px; }
+        nav details ul li a { font-weight: normal; font-size: 0.95rem; opacity: 0.9; color: var(--secondary-color); }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="logo1.png" alt="Belleza Celestial"></a>
+        </div>
+        <button class="menu-toggle" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <div class="search-container" id="search-container">
+            <i class="fas fa-search search-icon" id="search-icon-btn"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Buscar...">
+        </div>
+        <a href="#" id="cart-btn" class="cart-icon-header">
+            <i class="fas fa-shopping-cart"></i> 
+            <span id="cart-count" style="background: white; color: var(--primary-color); padding: 2px 6px; border-radius: 50%; font-size: 0.8rem; margin-left: 5px;">0</span>
+        </a>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#catalogo">Productos</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+                <li><a href="#" id="wishlist-nav-btn"><i class="fas fa-heart"></i></a></li>
+                <li><button class="dark-mode-btn" id="dark-mode-toggle"><i class="fas fa-moon"></i></button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="product-detail-container" id="product-container">
+            <!-- El contenido se cargará dinámicamente con JS -->
+            <p>Cargando producto...</p>
+        </div>
+    </main>
+
+    <!-- Sección Productos Vistos Recientemente -->
+    <section class="recent-section" id="recent-section" style="display: none;">
+        <h2 class="section-title" style="text-align: center; font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary-color);">Vistos Recientemente</h2>
+        <div class="container recent-grid" id="recent-grid"></div>
+    </section>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/share/1DBrKNRitr/?mibextid=wwXIfr" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/bellezacelestia_?igsh=MWxkOWNhb3kwaWY3Ng%" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/message/SECRN4W7JB2AK1" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <p style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem;">&copy; 2024 Belleza Celestial. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Carrito -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2 style="color: var(--primary-color);">Tu Carrito</h2>
+            <span class="close-cart" id="close-cart"><i class="fas fa-times"></i></span>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-footer">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; color: var(--primary-color);">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button class="btn-add" onclick="checkout()">Finalizar Compra</button>
+            <button class="btn-clear" id="clear-cart">Vaciar Carrito</button>
+        </div>
+    </aside>
+
+    <!-- Sidebar Wishlist -->
+    <aside class="cart-sidebar" id="wishlist-sidebar">
+        <div class="cart-header">
+            <h2>Mis Favoritos</h2>
+            <span class="close-cart" id="close-wishlist"><i class="fas fa-times"></i></span>
+        </div>
+        <div class="cart-items" id="wishlist-items">
+            <p style="text-align: center; color: #777; margin-top: 20px;">No tienes favoritos guardados.</p>
+        </div>
+        <div class="cart-footer">
+            <button class="btn-clear" onclick="clearWishlist()">Borrar Todo</button>
+        </div>
+    </aside>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Chatbot Widget -->
+    <div class="chat-toggle" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </div>
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <span>Asistente Celestial</span>
+            <i class="fas fa-times" style="cursor: pointer;" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="message bot">¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Escribe tu consulta..." onkeypress="handleChatInput(event)">
+            <button class="chat-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <a href="https://wa.me/5493704831264" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+    <script>
+        // Base de datos de productos (Simulada)
+        const productsDB = {
+            1: {
+                title: "Labial Mate Terciopelo",
+                price: "15.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Labial+Mate",
+                description: "Un labial de larga duración con acabado mate aterciopelado. Su fórmula hidratante enriquecida con vitamina E mantiene tus labios suaves y con un color intenso durante todo el día. Disponible en tonos celestiales."
+            },
+            2: {
+                title: "Gloss Brillo Estelar",
+                price: "12.50",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Gloss+Estelar",
+                description: "Brillo labial con partículas reflectoras de luz que dan un efecto volumen inmediato. No es pegajoso y aporta un toque de luz sutil perfecto para usar solo o sobre tu labial favorito."
+            },
+            3: {
+                title: "Bálsamo Hidratante Rosa",
+                price: "10.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Balsamo+Rosa",
+                description: "Cuidado profundo para tus labios con extracto de rosas naturales. Repara la sequedad y protege contra los agentes externos, dejando un suave tono rosado natural."
+            },
+            4: {
+                title: "Rubor en Polvo Durazno",
+                price: "18.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Rubor+Durazno",
+                description: "Rubor sedoso de larga duración que aporta un color saludable y natural a tus mejillas. Tono durazno universal."
+            },
+            5: {
+                title: "Rubor Líquido Pétalo",
+                price: "20.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Rubor+Liquido",
+                description: "Fórmula ligera y construible que se funde con la piel para un acabado radiante y fresco."
+            },
+            6: {
+                title: "Base Cobertura Total",
+                price: "25.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Base+Total",
+                description: "Base de maquillaje de alta cobertura que oculta imperfecciones y unifica el tono sin efecto máscara."
+            },
+            7: {
+                title: "BB Cream Ligera",
+                price: "18.50",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=BB+Cream",
+                description: "Hidratación y color en un solo paso. Perfecta para un look natural y diario."
+            },
+            8: {
+                title: "Paleta Nude Classics",
+                price: "35.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Paleta+Nude",
+                description: "12 sombras en tonos tierra y neutros, con acabados mate y satinados para cualquier ocasión."
+            },
+            9: {
+                title: "Sombra Individual Shimmer",
+                price: "8.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Sombra+Shimmer",
+                description: "Sombra de ojos altamente pigmentada con un brillo intenso y duradero."
+            },
+            10: {
+                title: "Delineador Líquido Negro",
+                price: "12.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Delineador+Liq",
+                description: "Punta precisa para un delineado perfecto, desde líneas finas hasta cat-eye dramático."
+            },
+            11: {
+                title: "Lápiz de Ojos Marrón",
+                price: "10.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Lapiz+Ojos",
+                description: "Textura cremosa que se desliza suavemente. Ideal para difuminar o para la línea de agua."
+            },
+            12: {
+                title: "Máscara Volumen Extremo",
+                price: "16.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Mascara+Vol",
+                description: "Cepillo diseñado para capturar cada pestaña y aportar un volumen impactante sin grumos."
+            },
+            13: {
+                title: "Máscara Waterproof",
+                price: "17.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Mascara+Water",
+                description: "Resistente al agua y al sudor. Pestañas perfectas en cualquier situación."
+            },
+            14: {
+                title: "Spray Fijador Mate",
+                price: "22.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Spray+Mate",
+                description: "Mantiene tu maquillaje intacto por horas y controla el brillo facial."
+            },
+            15: {
+                title: "Spray Fijador Dewy",
+                price: "22.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Spray+Dewy",
+                description: "Fija el maquillaje aportando un acabado jugoso y luminoso a la piel."
+            },
+            16: {
+                title: "Agua Micelar Bifásica",
+                price: "14.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Agua+Micelar",
+                description: "Elimina incluso el maquillaje a prueba de agua sin irritar la piel."
+            },
+            17: {
+                title: "Leche Limpiadora Suave",
+                price: "16.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Leche+Limp",
+                description: "Limpia e hidrata en profundidad, ideal para pieles sensibles o secas."
+            },
+            18: {
+                title: "Corrector Alta Cobertura",
+                price: "15.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Corrector+Alta",
+                description: "Cubre ojeras e imperfecciones con una fórmula ligera que no se cuartea."
+            },
+            19: {
+                title: "Corrector Iluminador",
+                price: "16.50",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Corrector+Ilum",
+                description: "Corrige e ilumina la mirada al instante. Contiene partículas reflectoras de luz."
+            },
+            20: {
+                title: "Polvo Traslúcido HD",
+                price: "24.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Polvo+HD",
+                description: "Sella el maquillaje y matifica la piel sin aportar peso ni color."
+            },
+            21: {
+                title: "Polvo Compacto Mate",
+                price: "22.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Polvo+Mate",
+                description: "Cobertura media para retocar el maquillaje durante el día y eliminar brillos."
+            },
+            22: {
+                title: "Iluminador Líquido Gold",
+                price: "19.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Ilum+Gold",
+                description: "Brillo dorado intenso para resaltar los puntos altos del rostro."
+            },
+            23: {
+                title: "Iluminador en Barra",
+                price: "18.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Ilum+Barra",
+                description: "Formato práctico y cremoso para una aplicación fácil y un brillo natural."
+            },
+            24: {
+                title: "Moño de Satén Grande",
+                price: "5.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Mono+Saten",
+                description: "Elegante moño de satén para un look sofisticado y cuidado del cabello."
+            },
+            25: {
+                title: "Set de Moños Velvet",
+                price: "8.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Set+Monos",
+                description: "Pack de dos moños de terciopelo suave, ideales para otoño e invierno."
+            },
+            26: {
+                title: "Moño con Lazos Largos",
+                price: "6.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Mono+Lazos",
+                description: "Moño con caida elegante, perfecto para coletas bajas o medias colas."
+            },
+            27: {
+                title: "Moño Estampado Floral",
+                price: "4.50",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Mono+Floral",
+                description: "Diseño fresco y primaveral para darle un toque de color a tu peinado."
+            },
+            28: {
+                title: "Vincha de Perlas",
+                price: "12.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Vincha+Perlas",
+                description: "Vincha rígida decorada con perlas de imitación, ideal para eventos."
+            },
+            29: {
+                title: "Vincha Nudo Terciopelo",
+                price: "9.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Vincha+Nudo",
+                description: "Estilo clásico con nudo superior en tela de terciopelo suave."
+            },
+            30: {
+                title: "Vincha Deportiva Elástica",
+                price: "5.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Vincha+Sport",
+                description: "Mantiene el cabello alejado del rostro durante tus rutinas de ejercicio."
+            },
+            31: {
+                title: "Vincha Rígida Satinada",
+                price: "7.50",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Vincha+Saten",
+                description: "Acabado brillante y elegante, cómoda para usar todo el día."
+            },
+            32: {
+                title: "Peine Desenredante Ancho",
+                price: "4.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Peine+Ancho",
+                description: "Dientes anchos para desenredar cabello húmedo o rizado sin romperlo."
+            },
+            33: {
+                title: "Peine de Bambú Natural",
+                price: "10.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Peine+Bambu",
+                description: "Ecológico y anti-frizz, distribuye los aceites naturales del cabello."
+            },
+            34: {
+                title: "Peine Cola de Ratón",
+                price: "3.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Peine+Cola",
+                description: "Herramienta esencial para seccionar el cabello y realizar peinados precisos."
+            },
+            35: {
+                title: "Set de Peines Estilista",
+                price: "15.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Set+Peines",
+                description: "Kit completo con diferentes tipos de peines para corte y peinado."
+            },
+            36: {
+                title: "Hebillas Click-Clack Colores",
+                price: "2.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Hebillas+Click",
+                description: "Pack de hebillas básicas en colores divertidos para el día a día."
+            },
+            37: {
+                title: "Hebilla Francesa Carey",
+                price: "5.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Hebilla+Carey",
+                description: "Diseño atemporal en acetato tipo carey, sujeta gran cantidad de cabello."
+            },
+            38: {
+                title: "Hebillas con Strass",
+                price: "6.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Hebillas+Strass",
+                description: "Brillo y glamour para tus peinados de noche o fiesta."
+            },
+            39: {
+                title: "Hebilla Geométrica Metal",
+                price: "4.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Hebilla+Metal",
+                description: "Diseño minimalista en metal dorado o plateado."
+            },
+            40: {
+                title: "Anillos para Trenzas Dorados",
+                price: "3.50",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Anillos+Trenza",
+                description: "Pequeños aros ajustables para decorar trenzas y rastas."
+            },
+            41: {
+                title: "Hilo Encerado para Trenzas",
+                price: "2.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Hilo+Trenza",
+                description: "Hilo resistente para decorar o atar trenzas, disponible en varios colores."
+            },
+            42: {
+                title: "Cuentas de Madera Mix",
+                price: "4.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Cuentas+Madera",
+                description: "Cuentas naturales con orificio grande para deslizar en mechones de cabello."
+            },
+            43: {
+                title: "Clips para Trenzas Plata",
+                price: "3.50",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Clips+Plata",
+                description: "Accesorios decorativos plateados para un look boho chic."
+            },
+            44: {
+                title: "Scrunchies de Seda",
+                price: "8.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Scrunchies",
+                description: "Protege tu cabello del quiebre con estas suaves colitas de seda."
+            },
+            45: {
+                title: "Gomitas Invisibles Espiral",
+                price: "5.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Gomitas+Espiral",
+                description: "No dejan marca en el cabello y ofrecen una sujeción fuerte."
+            },
+            46: {
+                title: "Gomitas Elásticas Negras",
+                price: "2.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Gomitas+Negras",
+                description: "Pack de elásticos básicos sin metal para todo tipo de peinados."
+            },
+            47: {
+                title: "Gomitas de Felpa Suave",
+                price: "4.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Gomitas+Felpa",
+                description: "Textura suave y cómoda, ideal para estar en casa o dormir."
+            },
+            48: {
+                title: "Cadena Acero Blanco Corazón",
+                price: "15.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Cadena+Corazon",
+                description: "Delicada cadena de acero blanco con dije de corazón, brillo duradero."
+            },
+            49: {
+                title: "Pulsera Acero Blanco Estrellas",
+                price: "12.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Pulsera+Estrellas",
+                description: "Pulsera con dijes de estrellas colgantes, cierre ajustable."
+            },
+            50: {
+                title: "Aros Argolla Acero Blanco",
+                price: "8.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Aros+Argolla",
+                description: "Argollas clásicas de tamaño medio, hipoalergénicas y livianas."
+            },
+            51: {
+                title: "Anillo Acero Blanco Ajustable",
+                price: "10.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Anillo+Ajustable",
+                description: "Anillo con diseño abierto adaptable a cualquier medida."
+            },
+            52: {
+                title: "Collar Acero Dorado Multicapa",
+                price: "18.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Collar+Multicapa",
+                description: "Collar triple capa con diferentes texturas, tendencia actual."
+            },
+            53: {
+                title: "Aros Colgantes Dorados",
+                price: "14.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Aros+Colgantes",
+                description: "Aros largos con movimiento, ideales para fiestas."
+            },
+            54: {
+                title: "Pulsera Rígida Dorada",
+                price: "16.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Pulsera+Rigida",
+                description: "Brazalete rígido de acero dorado, estilo minimalista."
+            },
+            55: {
+                title: "Tobillera Acero Dorado",
+                price: "11.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Tobillera+Dorada",
+                description: "Accesorio perfecto para el verano, resistente al agua."
+            },
+            56: {
+                title: "Cadena Plata 925 Finita",
+                price: "25.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Cadena+Plata",
+                description: "Cadena de plata italiana 925, tejido veneciano fino."
+            },
+            57: {
+                title: "Aros Abridores Plata",
+                price: "15.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Aros+Abridores",
+                description: "Pequeños aros de plata con punta de seguridad, ideales para segundos agujeros."
+            },
+            58: {
+                title: "Dije Plata 925 Luna",
+                price: "10.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Dije+Luna",
+                description: "Dije en forma de media luna, plata maciza."
+            },
+            59: {
+                title: "Anillo Plata 925 Cintillo",
+                price: "22.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Anillo+Cintillo",
+                description: "Anillo con hilera de cubic zirconia, elegante y sutil."
+            },
+            60: {
+                title: "Aros Oro 18k Perla",
+                price: "80.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Aros+Oro",
+                description: "Aros de oro 18k con perla cultivada, un clásico eterno."
+            },
+            61: {
+                title: "Cadena Oro Laminado",
+                price: "45.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Cadena+Oro",
+                description: "Cadena de alta calidad con baño de oro grueso, apariencia real."
+            },
+            62: {
+                title: "Dije Oro Inicial",
+                price: "30.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Dije+Inicial",
+                description: "Personaliza tu cadena con tu inicial en oro laminado."
+            },
+            63: {
+                title: "Pulsera Oro Hilo Rojo",
+                price: "35.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Pulsera+Hilo",
+                description: "Pulsera de protección con detalles en oro 18k."
+            },
+            64: {
+                title: "Piercing Nariz Acero",
+                price: "5.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Piercing+Nariz",
+                description: "Nostril de acero quirúrgico 316L, seguro y sin níquel."
+            },
+            65: {
+                title: "Aros Bolita Acero Q",
+                price: "4.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Aros+Bolita",
+                description: "Básicos imprescindibles, acero quirúrgico pulido."
+            },
+            66: {
+                title: "Piercing Ombligo Strass",
+                price: "8.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Piercing+Ombligo",
+                description: "Banana para ombligo con doble piedra brillante."
+            },
+            67: {
+                title: "Expansor Acero Negro",
+                price: "6.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Expansor+Negro",
+                description: "Túnel de acero anodizado negro, rosca interna."
+            },
+            68: {
+                title: "Collar Choker Colores",
+                price: "5.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Choker+Colores",
+                description: "Gargantilla divertida con mostacillas de colores."
+            },
+            69: {
+                title: "Set de Anillos Midi",
+                price: "7.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Set+Anillos",
+                description: "Pack de anillos para usar en falanges, metal fantasía."
+            },
+            70: {
+                title: "Aros Largos Flecos",
+                price: "9.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Aros+Flecos",
+                description: "Aros statement con flecos textiles, estilo boho."
+            },
+            71: {
+                title: "Pulsera de la Amistad",
+                price: "4.00",
+                image: "https://via.placeholder.com/500/e3f2fd/0056b3?text=Pulsera+Amistad",
+                description: "Pulsera tejida a mano, ideal para regalar."
+            }
+        };
+
+        // Cargar detalles del producto
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get('id');
+        const container = document.getElementById('product-container');
+
+        let wishlist = JSON.parse(localStorage.getItem('belleza-celestial-wishlist')) || [];
+        let recentProducts = JSON.parse(localStorage.getItem('belleza-celestial-recent')) || [];
+
+        if (productsDB[productId]) {
+            const p = productsDB[productId];
+            addToRecent(p); // Agregar a vistos recientemente
+            const isWishlisted = wishlist.some(item => item.id == productId);
+            container.innerHTML = `
+                <div class="detail-image">
+                    <img src="${p.image}" alt="${p.title}">
+                </div>
+                <div class="detail-info">
+                    <h1 class="detail-title">${p.title}</h1>
+                    <p class="detail-price">$${p.price}</p>
+                    <p class="detail-description">${p.description}</p>
+                    <button class="btn-add-large" onclick="addToCartFromDetail('${p.title}', '${p.price}', '${p.image}')">
+                        <i class="fas fa-shopping-cart"></i> Añadir al Carrito
+                    </button>
+                    <button class="btn-wishlist-detail ${isWishlisted ? 'active' : ''}" onclick="toggleWishlistDetail(${productId}, '${p.title}', '${p.price}', '${p.image}', this)">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            `;
+        } else {
+            container.innerHTML = '<p>Producto no encontrado.</p>';
+        }
+
+        // Lógica del Carrito (Reutilizada)
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalElement = document.getElementById('cart-total');
+        const cartCountElement = document.getElementById('cart-count');
+        const clearCartBtn = document.getElementById('clear-cart');
+
+        let cart = JSON.parse(localStorage.getItem('belleza-celestial-cart')) || [];
+
+        function openCart() { cartOverlay.classList.add('active'); cartSidebar.classList.add('active'); }
+        function closeCart() { cartOverlay.classList.remove('active'); cartSidebar.classList.remove('active'); }
+
+        function updateCart() {
+            localStorage.setItem('belleza-celestial-cart', JSON.stringify(cart));
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #777; margin-top: 20px;">Tu carrito está vacío.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    total += parseFloat(item.price) * (item.quantity || 1);
+                    const cartItem = document.createElement('div');
+                    cartItem.style.cssText = 'display:flex; align-items:center; margin-bottom:15px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;';
+                    cartItem.innerHTML = `
+                        <img src="${item.image}" style="width:60px; height:60px; object-fit:cover; border-radius:5px; margin-right:15px;">
+                        <div style="flex:1;">
+                            <div style="font-weight:bold; font-size:0.95rem;">${item.title}</div>
+                            <div style="color:#777; font-size:0.9rem;">$${item.price}</div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity || 1}</span>
+                                <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <i class="fas fa-trash" style="color:#ff4444; cursor:pointer;" onclick="removeFromCart(${index})"></i>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                });
+            }
+            cartTotalElement.textContent = '$' + total.toFixed(2);
+            cartCountElement.textContent = cart.length;
+        }
+
+        function addToCartFromDetail(title, price, image) {
+            const existingItem = cart.find(item => item.title === title);
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 1) + 1;
+            } else {
+                cart.push({ title, price, image, quantity: 1 });
+            }
+            updateCart();
+            showToast(`"${title}" añadido al carrito`);
+        }
+
+        // Cambiar Cantidad
+        window.changeQuantity = (index, delta) => {
+            if (!cart[index].quantity) cart[index].quantity = 1;
+            cart[index].quantity += delta;
+            
+            if (cart[index].quantity <= 0) {
+                if(confirm("¿Eliminar producto del carrito?")) {
+                    cart.splice(index, 1);
+                } else {
+                    cart[index].quantity = 1;
+                }
+            }
+            updateCart();
+        };
+
+        window.removeFromCart = (index) => { cart.splice(index, 1); updateCart(); };
+
+        function checkout() {
+            if (cart.length === 0) { alert("Tu carrito está vacío."); return; }
+            let message = "Hola Belleza Celestial, quisiera realizar el siguiente pedido:\n\n";
+            let total = 0;
+            cart.forEach(item => {
+                message += `- ${item.title} (x${item.quantity || 1}): $${(parseFloat(item.price) * (item.quantity || 1)).toFixed(2)}\n`;
+                total += parseFloat(item.price) * (item.quantity || 1);
+            });
+            message += `\nTotal: $${total.toFixed(2)}`;
+            const phoneNumber = "5493704831264"; 
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // --- LÓGICA WISHLIST ---
+        const wishlistSidebar = document.getElementById('wishlist-sidebar');
+        const wishlistItemsContainer = document.getElementById('wishlist-items');
+        const wishlistNavBtn = document.getElementById('wishlist-nav-btn');
+        const closeWishlistBtn = document.getElementById('close-wishlist');
+
+        function toggleWishlistDetail(id, title, price, image, btn) {
+            const index = wishlist.findIndex(item => item.id == id);
+            if (index === -1) {
+                wishlist.push({ id, title, price, image });
+                btn.classList.add('active');
+                showToast("Añadido a favoritos");
+            } else {
+                wishlist.splice(index, 1);
+                btn.classList.remove('active');
+                showToast("Eliminado de favoritos", "info");
+            }
+            localStorage.setItem('belleza-celestial-wishlist', JSON.stringify(wishlist));
+            renderWishlist();
+        }
+
+        function renderWishlist() {
+            wishlistItemsContainer.innerHTML = '';
+            if (wishlist.length === 0) {
+                wishlistItemsContainer.innerHTML = '<p style="text-align: center; color: #777; margin-top: 20px;">No tienes favoritos guardados.</p>';
+            } else {
+                wishlist.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'cart-item';
+                    div.innerHTML = `
+                        <img src="${item.image}" alt="${item.title}" style="width:60px; height:60px; object-fit:cover; border-radius:5px; margin-right:15px;">
+                        <div style="flex:1;">
+                            <div style="font-weight:bold; font-size:0.95rem;">${item.title}</div>
+                            <div style="color:#777; font-size:0.9rem;">$${item.price}</div>
+                        </div>
+                    `;
+                    wishlistItemsContainer.appendChild(div);
+                });
+            }
+        }
+
+        wishlistNavBtn.addEventListener('click', (e) => { e.preventDefault(); cartOverlay.classList.add('active'); wishlistSidebar.classList.add('active'); renderWishlist(); });
+        closeWishlistBtn.addEventListener('click', () => { cartOverlay.classList.remove('active'); wishlistSidebar.classList.remove('active'); });
+        
+        function clearWishlist() {
+            wishlist = []; localStorage.setItem('belleza-celestial-wishlist', JSON.stringify(wishlist)); renderWishlist();
+            const btn = document.querySelector('.btn-wishlist-detail'); if(btn) btn.classList.remove('active');
+        }
+
+        // Menú Hamburguesa
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mainNav = document.getElementById('main-nav');
+        if(mobileMenuBtn && mainNav) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+            });
+
+            // Cerrar menú al hacer scroll
+            window.addEventListener('scroll', () => {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                }
+            });
+        }
+
+        // Búsqueda Móvil
+        const searchIconBtn = document.getElementById('search-icon-btn');
+        const searchContainer = document.getElementById('search-container');
+        if(searchIconBtn) {
+            searchIconBtn.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    searchContainer.classList.toggle('active');
+                    if (searchContainer.classList.contains('active')) document.getElementById('search-input').focus();
+                }
+            });
+        }
+
+        // Modo Oscuro
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+        
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            body.classList.add('dark-mode');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+        });
+
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${message}`;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // --- LÓGICA VISTOS RECIENTEMENTE ---
+        function addToRecent(product) {
+            // Evitar duplicados y mantener solo los últimos 6
+            // Usamos el ID del producto actual (productId) que viene de la URL
+            const id = parseInt(productId);
+            recentProducts = recentProducts.filter(p => p.id !== id);
+            recentProducts.unshift({ id: id, title: product.title, price: product.price, image: product.image });
+            if (recentProducts.length > 6) recentProducts.pop();
+            
+            localStorage.setItem('belleza-celestial-recent', JSON.stringify(recentProducts));
+            renderRecentProducts();
+        }
+
+        function renderRecentProducts() {
+            const container = document.getElementById('recent-grid');
+            const section = document.getElementById('recent-section');
+            
+            if (recentProducts.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            container.innerHTML = recentProducts.map(p => `
+                <div class="recent-card">
+                    <a href="detalle.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+                        <img src="${p.image}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px; margin-bottom: 10px;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 5px;">${p.title}</h4>
+                    </a>
+                    <p style="font-weight: bold; font-size: 0.9rem; color: #555;">$${p.price}</p>
+                </div>
+            `).join('');
+        }
+
+        // --- LÓGICA CHATBOT ---
+        function toggleChat() {
+            document.getElementById('chat-window').classList.toggle('active');
+        }
+
+        function handleChatInput(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            input.value = '';
+
+            // Respuesta simulada
+            setTimeout(() => {
+                let response = "Lo siento, no entendí tu consulta. Por favor contáctanos por WhatsApp.";
+                const lowerText = text.toLowerCase();
+
+                if (lowerText.includes('pedido') || lowerText.includes('orden') || lowerText.includes('estado')) {
+                    const numberMatch = text.match(/\d+/);
+                    if (numberMatch) {
+                        const orderId = numberMatch[0];
+                        const orders = JSON.parse(localStorage.getItem('belleza_orders')) || [];
+                        const order = orders.find(o => o.id == orderId);
+                        
+                        if (order) {
+                            response = `El pedido #${orderId} del ${order.date} (${order.total}) está: <strong>En Preparación</strong>.`;
+                        } else {
+                            response = `No encontré el pedido #${orderId}. Por favor verifica el número.`;
+                        }
+                    } else {
+                        response = "Por favor indícame el número de tu pedido para verificar el estado.";
+                    }
+                } else if (lowerText.includes('hola') || lowerText.includes('buen')) response = "¡Hola! Bienvenido a Belleza Celestial. ¿Buscas algún producto en especial?";
+                else if (lowerText.includes('precio') || lowerText.includes('costo')) response = "Los precios varían según el producto. Puedes verlos en nuestro catálogo.";
+                else if (lowerText.includes('envio') || lowerText.includes('envío')) response = "Realizamos envíos a todo el país. El costo depende de tu ubicación.";
+                else if (lowerText.includes('pago') || lowerText.includes('tarjeta')) response = "Aceptamos tarjetas de crédito, débito y transferencias bancarias.";
+                else if (lowerText.includes('tienda') || lowerText.includes('ubicacion')) response = "Somos una tienda 100% online, enviamos directo a tu hogar.";
+
+                addMessage(response, 'bot');
+            }, 1000);
+        }
+
+        function addMessage(text, sender) {
+            const body = document.getElementById('chat-body');
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.innerText = text;
+            body.appendChild(div);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        cartBtn.addEventListener('click', (e) => { e.preventDefault(); openCart(); });
+        closeCartBtn.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', () => { wishlistSidebar.classList.remove('active'); });
+        clearCartBtn.addEventListener('click', () => { cart = []; updateCart(); });
+
+        updateCart();
+        renderRecentProducts();
+    </script>
+</body>
+</html>
